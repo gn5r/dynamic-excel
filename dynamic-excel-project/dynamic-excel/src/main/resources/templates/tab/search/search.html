@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+    <!-- 一覧検索タブコンテンツ -->
+    <div th:fragment="content" class="container-fluid m-0 p-0">
+        <div class="row justify-content-center align-items-center">
+            <div class="col">
+                <!-- アコーディオンで検索条件と検索結果の表示切り替え -->
+                <div class="acordion" id="search-condition-acordion">
+                    <!-- 検索条件 -->
+                    <div class="card">
+                        <!-- 検索条件のアコーディオンヘッダー -->
+                        <div class="card-header" id="condition-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                    id="search-condition-acordion-header" data-target="#condition-content"
+                                    aria-expanded="true" aria-controls="condition-content">
+                                    検索条件
+                                </button>
+                            </h5>
+                        </div>
+
+                        <!-- 検索条件のアコーディオンコンテンツ -->
+                        <div id="condition-content" class="collapse show" aria-labelledby="condition-header"
+                            data-parent="#search-condition-acordion">
+                            <!-- 検索条件のカードボディ -->
+                            <div class="card-body">
+                                <div th:replace="/tab/search/contents/condition :: content"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 一覧 -->
+                    <div class="card">
+                        <!-- 一覧のアコーディオンヘッダー -->
+                        <div class="card-header" id="list-header">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                    id="search-list-acordion-header" data-target="#list-content"
+                                    aria-expanded="true" aria-controls="list-content">
+                                    一覧
+                                </button>
+                            </h5>
+                        </div>
+
+                        <!-- 一覧のアコーディオンコンテンツ -->
+                        <div id="list-content" class="collapse" aria-labelledby="list-header"
+                            data-parent="#search-condition-acordion">
+                            <div class="card-body">
+                                <!-- 呼ばれたHTMLファイルから見ての相対パス -->
+                                <div th:replace="/tab/search/contents/list :: content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

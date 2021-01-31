@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- 共通ライブラリetcを読み込む -->
+    <link th:replace="/common/include :: include">
+    <title>dynamic-excel</title>
+</head>
+
+<body>
+    <!-- ヘッダーを読み込んで書き換え -->
+    <div th:replace="/common/header :: header"></div>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <div class="container-fluid p-3 h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col h-100">
+                    <!-- カード型タブビュー -->
+                    <div class="card h-100">
+                        <!-- カードヘッダーをタブバーにする -->
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#list" data-toggle="tab">一覧検索</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#regist" data-toggle="tab">データ登録</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- カードボディにそれぞれのタブ内容を記述 -->
+                        <div class="card-body tab-content" style="overflow-y: scroll;">
+                            <!-- 一覧 -->
+                            <div id="list" class="tab-pane active" th:insert="/tab/search/search :: content"></div>
+                            <div id="regist" class="tab-pane h-100" th:insert="/tab/regist/regist :: content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- フッターを読み込んで書き換え -->
+    <div th:replace="/common/footer :: footer"></div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+html,
+body {
+  height: 100%;
+}
+
+main {
+  height: 90%!important;
+  overflow-y: scroll;
+}
+
+html {
+  overflow: hidden;
+}
+
+.h-90 {
+  height: 90%!important;
+}
+
+/* 数値入力の右にあるボタン(スピンボタン)を消す */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* アコーディオンの設定 */
+div[id$="_header"] {
+  padding: 0!important;
+}

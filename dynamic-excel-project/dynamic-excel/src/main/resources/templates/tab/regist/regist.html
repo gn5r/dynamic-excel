@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+    <!-- データ登録タブコンテンツ -->
+    <div th:fragment="content" class="container-fruid m-0 p-0 h-100">
+        <!-- コンテンツ中央に表示 -->
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body" id="regist-form">
+                        <div class="form-row">
+                            <div class="form-group col-4">
+                                <label for="form-kanji-name" class="control-label">漢字名</label>
+                                <input type="text" class="form-control" id="form-kanji-name" placeholder="漢字名称を入力" required>
+                            </div>
+                            <div class="form-group col-8">
+                                <label for="form-name" class="control-label">名称</label>
+                                <input type="text" class="form-control" id="form-name" placeholder=" ひらがな/カタカナを入力" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-3">
+                                <label for="form-order" class="control-label">目</label>
+                                <input type="text" class="form-control" id="form-order" placeholder=" 目を入力">
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="form-family" class="control-label">科</label>
+                                <input type="text" class="form-control" id="form-family" placeholder=" 科を入力">
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="form-genus" class="control-label">属</label>
+                                <input type="text" class="form-control" id="form-genus" placeholder=" 属を入力">
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-success" id="regist">登録</button>
+                        <button class="btn btn-outline-primary" id="regist-form-clear">クリア</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.gn5r</groupId>
+		<artifactId>dynamic-excel-project</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>dynamic-excel-dependencies</artifactId>
+	<packaging>pom</packaging>
+	<name>dynamic-excel-dependencies</name>
+
+	<properties>
+		<apache-poi.version>4.1.2</apache-poi.version>
+		<commons-collections4.version>4.4</commons-collections4.version>
+		<modelmapper.version>2.3.9</modelmapper.version>
+		<swagger2.version>2.9.2</swagger2.version>
+		<doma-spring-boot.version>1.3.0</doma-spring-boot.version>
+		<doma.version>2.29.0</doma.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- apache poi -->
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${apache-poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${apache-poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${apache-poi.version}</version>
+			</dependency>
+			<!-- commons-collections4 -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-collections4</artifactId>
+				<version>${commons-collections4.version}</version>
+			</dependency>
+			<!-- modelmapper -->
+			<dependency>
+				<groupId>org.modelmapper</groupId>
+				<artifactId>modelmapper</artifactId>
+				<version>${modelmapper.version}</version>
+			</dependency>
+			<!-- swagger -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${swagger2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${swagger2.version}</version>
+			</dependency>
+			<!-- doma -->
+			<dependency>
+				<groupId>org.seasar.doma.boot</groupId>
+				<artifactId>doma-spring-boot-starter</artifactId>
+				<version>${doma-spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.seasar.doma</groupId>
+				<artifactId>doma</artifactId>
+				<version>${doma.version}</version>
+			</dependency>
+			<!-- dynamic excel modules -->
+			<dependency>
+				<groupId>com.github.gn5r</groupId>
+				<artifactId>dynamic-excel-autoconfigure</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

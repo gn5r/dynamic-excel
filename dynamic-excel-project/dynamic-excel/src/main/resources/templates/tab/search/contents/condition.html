@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 一覧検索タブコンテンツ -->
+    <div th:fragment="content" class="container-fluid p-0">
+        <div class="row justify-content-start align-items-start">
+            <div class="col" id="condition-form">
+                <div class="form-row">
+                    <div class="form-group col-lg-1">
+                        <label for="condition-id" class="control-label">ID</label>
+                        <input type="number" class="form-control" id="condition-id" placeholder="IDを入力">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="condition-kanji-name" class="control-label">漢字名</label>
+                        <input type="text" class="form-control" id="condition-kanji-name" placeholder="漢字名称を入力"
+                            required>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="condition-name" class="control-label">名称</label>
+                        <input type="text" class="form-control" id="condition-name" placeholder=" ひらがな/カタカナを入力"
+                            required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-1">
+                        <label for="condition-order" class="control-label">目</label>
+                        <select class="form-control" id="condition-order">
+                            <option value=""></option>
+                            <option th:each="item : ${orderList}" th:value="${item.value}" th:text="${item.value}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <label for="condition-family" class="control-label">科</label>
+                        <select class="form-control" id="condition-family">
+                            <option value=""></option>
+                            <option th:each="item : ${familyList}" th:value="${item.value}" th:text="${item.value}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-1">
+                        <label for="condition-genus" class="control-label">属</label>
+                        <select class="form-control" id="condition-genus">
+                            <option value=""></option>
+                            <option th:each="item : ${genusList}" th:value="${item.value}" th:text="${item.value}"></option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary" id="search">検索</button>
+                <button class="btn btn-outline-primary" id="condition-clear">クリア</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
