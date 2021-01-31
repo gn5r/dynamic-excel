@@ -1,0 +1,41 @@
+{
+  "footer-bar": {
+    "attributes": [],
+    "description": "フッターバー"
+  },
+  "header-bar": {
+    "attributes": [
+      "color",
+      "dark",
+      "dense",
+      "spacer",
+      "title-text"
+    ],
+    "description": "ヘッダーバー"
+  },
+  "c-text-field": {
+    "attributes": [
+      "autofocus",
+      "clearable",
+      "dark",
+      "label",
+      "placeholder",
+      "readonly",
+      "value"
+    ],
+    "description": "クリップボード付きテキストフィールド"
+  },
+  "text-field": {
+    "attributes": [
+      "autofocus",
+      "clearable",
+      "dark",
+      "disabled",
+      "label",
+      "placeholder",
+      "readonly",
+      "value"
+    ],
+    "description": "テキストフィールド"
+  }
+}

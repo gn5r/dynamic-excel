@@ -1,0 +1,82 @@
+{
+  "header-bar/title-text": {
+    "type": "string",
+    "description": "タイトルテキスト"
+  },
+  "header-bar/color": {
+    "type": "string",
+    "description": "ヘッダーバーの色"
+  },
+  "header-bar/dark": {
+    "type": "boolean",
+    "description": "ダークモードON/OFFフラグ"
+  },
+  "header-bar/dense": {
+    "type": "boolean",
+    "description": "細く表示"
+  },
+  "header-bar/spacer": {
+    "type": "boolean",
+    "description": "タイトルテキストの右隣のスペースON/OFFフラグ"
+  },
+  "c-text-field/value": {
+    "type": "any",
+    "description": ""
+  },
+  "c-text-field/readonly": {
+    "type": "boolean",
+    "description": ""
+  },
+  "c-text-field/autofocus": {
+    "type": "boolean",
+    "description": ""
+  },
+  "c-text-field/clearable": {
+    "type": "boolean",
+    "description": ""
+  },
+  "c-text-field/dark": {
+    "type": "boolean",
+    "description": ""
+  },
+  "c-text-field/placeholder": {
+    "type": "string",
+    "description": ""
+  },
+  "c-text-field/label": {
+    "type": "string",
+    "description": ""
+  },
+  "text-field/value": {
+    "type": "any",
+    "description": ""
+  },
+  "text-field/readonly": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/disabled": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/autofocus": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/clearable": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/dark": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/placeholder": {
+    "type": "string",
+    "description": ""
+  },
+  "text-field/label": {
+    "type": "string",
+    "description": ""
+  }
+}
