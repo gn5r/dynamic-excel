@@ -36,3 +36,6 @@ build/
 .DS_Store
 node_modules
 /dist
+
+### Spring Boot ###
+.h2
