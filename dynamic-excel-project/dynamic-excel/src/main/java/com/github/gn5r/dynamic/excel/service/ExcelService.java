@@ -1,16 +1,23 @@
 package com.github.gn5r.dynamic.excel.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.github.gn5r.dynamic.excel.dto.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.enums.経費Enum;
+import com.github.gn5r.dynamic.excel.util.ExcelUtil;
+import com.github.gn5r.dynamic.excel.util.ExcelUtil.ExcelData;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -20,13 +27,27 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ExcelService {
 
     private CreationHelper helper;
+
+    /**
+     * /excel/list/
+     */
+    private String LIST_TEMPLATE_DIR = "/excel/list/";
+    /**
+     * template1.xlsx
+     */
+    private String LIST_TEMPLATE_FINE_NAME = "template1.xlsx";
 
     public Map<String, Object> consoleFileContents(InputStream is) {
         Workbook wb = null;
@@ -102,5 +123,121 @@ public class ExcelService {
             }
         }
         return null;
+    }
+
+    /**
+     * 果物一覧を作成する
+     * 
+     * @param dto 果物一覧作成用Dto
+     * @return ByteArrayOutputStream
+     */
+    public ByteArrayOutputStream createList(FruitsListExcelDto dto) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            InputStream is = new ClassPathResource(this.LIST_TEMPLATE_DIR + this.LIST_TEMPLATE_FINE_NAME)
+                    .getInputStream();
+            Workbook template = WorkbookFactory.create(is);
+            Sheet sheet = template.getSheetAt(0);
+            log.info(sheet.getSheetName());
+
+            // 発行日と発行者をセットする
+            List<ExcelData> issue = ExcelUtil.getExcelDataList(template, dto);
+            if (CollectionUtils.isNotEmpty(issue)) {
+                for (ExcelData data : issue) {
+                    this.setRowData(sheet, data.getRowNum(), data.getCellNum(), data.getValue());
+                }
+            }
+
+            // 一覧化するデータの数だけrowを作成する
+            for (int i = 0; i < dto.getList().size(); i++) {
+                List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(i));
+
+                if (i > 0) {
+                    int rowNum = dataList.get(0).getRowNum();
+                    this.copyRow(template, sheet, rowNum, rowNum + i);
+                }
+
+                if (CollectionUtils.isNotEmpty(dataList)) {
+                    for (ExcelData data : dataList) {
+                        this.setRowData(sheet, data.getRowNum() + i, data.getCellNum(), data.getValue());
+                    }
+                }
+            }
+            // 書き込む
+            template.setSheetName(0, "果物一覧");
+            template.write(out);
+        } catch (IOException | EncryptedDocumentException e) {
+            e.printStackTrace();
+        }
+
+        return out;
+    }
+
+    /**
+     * 
+     * @param workbook          ワークブック
+     * @param worksheet         ワークシート
+     * @param sourceRowNum      コピー元の行インデックス
+     * @param destinationRowNum コピー先の行インデックス
+     */
+    private void copyRow(Workbook workbook, Sheet worksheet, int sourceRowNum, int destinationRowNum) {
+        Row newRow = worksheet.getRow(destinationRowNum);
+        Row sourceRow = worksheet.getRow(sourceRowNum);
+
+        if (newRow != null) {
+            // コピー先に行が既に存在する場合、１行下にずらす
+            worksheet.shiftRows(destinationRowNum, worksheet.getLastRowNum(), 1);
+            newRow = worksheet.createRow(destinationRowNum);
+        } else {
+            // 存在しない場合は作成
+            newRow = worksheet.createRow(destinationRowNum);
+        }
+
+        // セルの型、スタイル、値などをすべてコピーする
+        for (int i = 0; i < sourceRow.getLastCellNum(); i++) {
+            Cell oldCell = sourceRow.getCell(i);
+            Cell newCell = newRow.createCell(i);
+
+            // コピー元の行が存在しない場合、処理を中断
+            if (oldCell == null) {
+                newCell = null;
+                continue;
+            }
+
+            // スタイルのコピー
+            CellStyle newCellStyle = workbook.createCellStyle();
+            newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
+            newCell.setCellStyle(newCellStyle);
+        }
+
+        // セル結合のコピー
+        for (int i = 0; i < worksheet.getNumMergedRegions(); i++) {
+            CellRangeAddress cellRangeAddress = worksheet.getMergedRegion(i);
+            if (cellRangeAddress.getFirstRow() == sourceRow.getRowNum()) {
+                CellRangeAddress newCellRangeAddress = new CellRangeAddress(newRow.getRowNum(),
+                        (newRow.getRowNum() + (cellRangeAddress.getLastRow() - cellRangeAddress.getFirstRow())),
+                        cellRangeAddress.getFirstColumn(), cellRangeAddress.getLastColumn());
+                worksheet.addMergedRegion(newCellRangeAddress);
+            }
+        }
+    }
+
+    /**
+     * 1行のセルにデータをセットする
+     * 
+     * @param sheet   シート
+     * @param rowNum  行インデックス
+     * @param cellNum セルインデックス
+     * @param value   セルに書き込む値
+     */
+    private void setRowData(Sheet sheet, int rowNum, int cellNum, Object value) {
+        Row newRow = sheet.getRow(rowNum);
+        Cell newCell = newRow.getCell(cellNum);
+
+        if (value instanceof Integer) {
+            newCell.setCellValue(String.valueOf(value));
+        } else if (value instanceof String) {
+            newCell.setCellValue((String) value);
+        }
     }
 }
