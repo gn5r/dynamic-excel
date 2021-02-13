@@ -148,7 +148,6 @@ public class ExcelService {
                 }
             }
 
-            // 一覧化するデータの数だけrowを作成する
             for (int i = 0; i < dto.getList().size(); i++) {
                 List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(i));
 
