@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <header-bar text="dynamic-excel"></header-bar>
     <v-main>
       <router-view />
     </v-main>
@@ -12,7 +11,6 @@
 export default {
   name: "App",
   components: {
-    HeaderBar: () => import ("@/components/common/HeaderBar"),
     FooterBar: () => import("@/components/common/FooterBar")
   },
   computed: {

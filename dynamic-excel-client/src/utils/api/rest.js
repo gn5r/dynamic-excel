@@ -4,18 +4,6 @@ const axiosBase = require("axios");
 // 出力オブジェクト
 let rest = {};
 
-// axiosBaseからHttp通信に必要な情報を設定し、作成したインスタンスを保存する
-const axios = axiosBase.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL, //通信先URLにコンストラクタの引数であるbaseUrlを設定
-  proxy: false, // プロキシはoff
-  responseType: "json", // レスポンスタイプ(Http通信時の応答時のデータ型をjsonに設定)
-  timeout: 15000, // タイムアウト(応答までの時間)を15秒に設定
-  // ヘッダーの設定
-  headers: {
-    "Access-Control-Allow-Origin": "*", // CROSをすべて許可する
-  },
-});
-
 /**
  * GETリクエスト
  * 引数にリクエスト先のパスを渡すこと
@@ -23,6 +11,17 @@ const axios = axiosBase.create({
  * @param {Object} option axiosのオプション(デフォルトはnull)
  */
 rest.get = (url, option = null) => {
+  // axiosBaseからHttp通信に必要な情報を設定し、作成したインスタンスを保存する
+  const axios = axiosBase.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL, //通信先URLに環境変数で設定したbaseUrlを設定
+    proxy: false, // プロキシはoff
+    responseType: "json", // レスポンスタイプ(Http通信時の応答時のデータ型をjsonに設定)
+    timeout: 15000, // タイムアウト(応答までの時間)を15秒に設定
+    // ヘッダーの設定
+    headers: {
+      "Access-Control-Allow-Origin": "*", // CROSをすべて許可する
+    },
+  });
   return new Promise((resolve, reject) => {
     axios
       .get(url, option)
@@ -43,6 +42,17 @@ rest.get = (url, option = null) => {
  * @param {Object} option axiosのオプション(デフォルトはnull)
  */
 rest.post = (url, data, option = null) => {
+  // axiosBaseからHttp通信に必要な情報を設定し、作成したインスタンスを保存する
+  const axios = axiosBase.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL, //通信先URLに環境変数で設定したbaseUrlを設定
+    proxy: false, // プロキシはoff
+    responseType: "json", // レスポンスタイプ(Http通信時の応答時のデータ型をjsonに設定)
+    timeout: 15000, // タイムアウト(応答までの時間)を15秒に設定
+    // ヘッダーの設定
+    headers: {
+      "Access-Control-Allow-Origin": "*", // CROSをすべて許可する
+    },
+  });
   return new Promise((resolve, reject) => {
     axios
       .post(url, data, option)
@@ -50,7 +60,7 @@ rest.post = (url, data, option = null) => {
         resolve(convertResponse(response));
       })
       .catch((error) => {
-        reject(convertError(error));
+        reject(error);
       });
   });
 };
@@ -63,6 +73,17 @@ rest.post = (url, data, option = null) => {
  * @param {Object} option axiosのオプション(デフォルトはnull)
  */
 rest.put = (url, data, option = null) => {
+  // axiosBaseからHttp通信に必要な情報を設定し、作成したインスタンスを保存する
+  const axios = axiosBase.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL, //通信先URLに環境変数で設定したbaseUrlを設定
+    proxy: false, // プロキシはoff
+    responseType: "json", // レスポンスタイプ(Http通信時の応答時のデータ型をjsonに設定)
+    timeout: 15000, // タイムアウト(応答までの時間)を15秒に設定
+    // ヘッダーの設定
+    headers: {
+      "Access-Control-Allow-Origin": "*", // CROSをすべて許可する
+    },
+  });
   return new Promise((resolve, reject) => {
     axios
       .put(url, data, option)
@@ -82,6 +103,17 @@ rest.put = (url, data, option = null) => {
  * @param {Object} option axiosのオプション(デフォルトはnull)
  */
 rest.del = (url, option = null) => {
+  // axiosBaseからHttp通信に必要な情報を設定し、作成したインスタンスを保存する
+  const axios = axiosBase.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL, //通信先URLに環境変数で設定したbaseUrlを設定
+    proxy: false, // プロキシはoff
+    responseType: "json", // レスポンスタイプ(Http通信時の応答時のデータ型をjsonに設定)
+    timeout: 15000, // タイムアウト(応答までの時間)を15秒に設定
+    // ヘッダーの設定
+    headers: {
+      "Access-Control-Allow-Origin": "*", // CROSをすべて許可する
+    },
+  });
   return new Promise((resolve, reject) => {
     axios
       .delete(url, option)
@@ -98,7 +130,6 @@ rest.del = (url, option = null) => {
  * axiosのResponseオブジェを独自オブジェに変換し返却する
  *
  * @param {*} response axios Responseオブジェクト
- * @returns {Object} 変換したResponseオブジェクト
  */
 function convertResponse(response) {
   return {
@@ -116,7 +147,6 @@ function convertResponse(response) {
  * axiosのErrorオブジェを独自オブジェに変換し返却する
  *
  * @param {*} error axios Errorオブジェクト
- * @returns {Object} 変換したResponseオブジェクト
  */
 function convertError(error) {
   return {

@@ -1,0 +1,61 @@
+// スクロールバーの幅を細くする
+// ::-webkit-scrollbar {
+//   width: 10px;
+// }
+
+html, body {
+  overflow: auto;
+}
+
+// 入力系のdisabled時に背景をグレーアウトさせる
+.disabled {
+  .v-input__control {
+    .v-input__slot {
+      background-color: #dcdcdc !important;
+      caret-color: #fff;
+    }
+  }
+}
+
+// 必須項目は背景色を黄色にする
+.required {
+  .v-input__control {
+    .v-input__slot {
+      background-color: #ffff00 !important;
+      caret-color: #fff;
+    }
+  }
+}
+
+// エラー時の背景色
+.field-error {
+  .v-input__control {
+    .v-input__slot {
+      background-color: #ea5532 !important;
+      caret-color: #fff;
+    }
+  }
+}
+
+// エラー時の背景色
+.v-application {
+  .error--text {
+    .v-input__control {
+      .v-input__slot {
+        background-color: #ff7f50 !important;
+        caret-color: #fff;
+      }
+    }
+  }
+}
+
+// テーブルをストライプにする(いくつか用意)
+.table-striped {
+  table tr th {
+    background-color: #bdbdbd !important;
+    border-right: solid 1px #fff;
+  }
+  table tr:nth-child(even) td {
+    background-color: #eeeeee !important;
+  }
+}

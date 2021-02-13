@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row justify="start" align="center" no-gutters>
+    <v-row justify="start" align="start" no-gutters>
       <v-col>
         <!-- アコーディオン -->
         <v-expansion-panels v-model="panel" accordion>
@@ -8,18 +8,14 @@
           <v-expansion-panel>
             <v-expansion-panel-header>検索条件</v-expansion-panel-header>
             <v-expansion-panel-content>
-              <condition
-                v-model="result"
-                :loading.sync="loading"
-                @search="panel = 1"
-              />
+              <condition v-model="result" @search="panel = 1" />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <!-- 検索結果 -->
           <v-expansion-panel>
             <v-expansion-panel-header>一覧</v-expansion-panel-header>
             <v-expansion-panel-content>
-              <list v-model="result" :loading="loading" />
+              <list v-model="result" />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -31,6 +27,7 @@
 <script>
 import Condition from "@/components/tabs/search/contents/Condition";
 import List from "@/components/tabs/search/contents/List";
+import { mapState } from "vuex";
 
 export default {
   name: "",
@@ -39,11 +36,12 @@ export default {
   data: () => ({
     panel: 0,
     result: [],
-    loading: false,
   }),
   methods: {},
   created() {},
-  computed: {},
+  computed: {
+    ...mapState({}),
+  },
   watch: {},
   components: {
     Condition,
@@ -52,4 +50,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-expansion-panel-content >>> .v-expansion-panel-content__wrap {
+  padding: 0;
+}
+</style>

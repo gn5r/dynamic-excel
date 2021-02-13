@@ -4,17 +4,17 @@
       <v-col>
         <v-form lazy-validation ref="form">
           <v-row>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" lg="2">
               <text-field v-model="form.id" label="ID" placeholder="IDを入力" />
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" sm="6" lg="3">
               <text-field
                 v-model="form.kanjiName"
                 label="漢字名"
                 placeholder="漢字名称を入力"
               />
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" sm="6" lg="3">
               <text-field
                 v-model="form.name"
                 label="名称"
@@ -23,7 +23,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="2">
+            <v-col cols="12" sm="4" lg="2">
               <select-box
                 v-model="form.order"
                 label="目名"
@@ -33,7 +33,7 @@
                 clearable
               />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" lg="2">
               <select-box
                 v-model="form.family"
                 label="科名"
@@ -43,7 +43,7 @@
                 clearable
               />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="12" sm="6" lg="2">
               <select-box
                 v-model="form.genus"
                 label="属名"
@@ -55,10 +55,10 @@
             </v-col>
           </v-row>
           <v-row justify="start" no-gutters>
-            <v-col cols="1">
+            <v-col cols="3" sm="1" lg="1">
               <v-btn color="primary" outlined @click="search">検索</v-btn>
             </v-col>
-            <v-col cols="1">
+            <v-col cols="3" sm="1" lg="1">
               <v-btn color="primary" outlined @click="clear">クリア</v-btn>
             </v-col>
           </v-row>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import rest from "@/utils/api/rest";
 
 export default {
@@ -84,10 +84,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
   },
   data: () => ({
     form: {},
@@ -101,19 +97,19 @@ export default {
     async search() {
       const uri = "/search";
       this.$emit("search", []);
-      this.$emit("update:loading", true);
+      this.setLoading(true);
       const res = await rest.post(uri, this.form);
-      setTimeout(() => {
-        this.$emit("update:loading", false);
+      this.setLoading(false);
 
-        if (res.status) {
-          console.debug(res.data.result);
-          this.$emit("search", res.data.result);
-        } else {
-          this.$emit("search", []);
-        }
-      }, 5000);
+      if (res.status) {
+        console.debug(res.data.result);
+        this.$emit("search", res.data.result);
+      } else {
+        this.$emit("search", []);
+      }
     },
+
+    ...mapActions("app", ["setLoading"]),
   },
   created() {},
   computed: {

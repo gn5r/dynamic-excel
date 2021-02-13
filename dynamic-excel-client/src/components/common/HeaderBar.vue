@@ -1,8 +1,11 @@
 <template>
-  <v-app-bar app dark :color="color">
-    <v-toolbar-title>{{ text }}</v-toolbar-title>
-    <v-spacer />
+  <v-app-bar app dark :color="color" :dense="dense">
+    <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-spacer v-if="spacer" />
     <slot name="app-bar-items"></slot>
+    <template v-for="(value, name) in $slots" v-slot:[name]>
+      <slot :name="name" />
+    </template>
   </v-app-bar>
 </template>
 
@@ -16,10 +19,18 @@ export default {
       type: String,
       default: undefined,
     },
-    text: {
+    title: {
       type: String,
       default: null,
     },
+    spacer: {
+      type: Boolean,
+      default: true
+    },
+    dense: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({}),
   methods: {},
@@ -30,4 +41,5 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
