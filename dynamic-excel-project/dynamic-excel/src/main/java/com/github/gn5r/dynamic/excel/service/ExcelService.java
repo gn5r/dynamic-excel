@@ -177,20 +177,20 @@ public class ExcelService {
      * 
      * @param workbook          ワークブック
      * @param worksheet         ワークシート
-     * @param sourceRowNum      コピー元の行インデックス
-     * @param destinationRowNum コピー先の行インデックス
+     * @param source      コピー元の行インデックス
+     * @param target コピー先の行インデックス
      */
-    private void copyRow(Workbook workbook, Sheet worksheet, int sourceRowNum, int destinationRowNum) {
-        Row newRow = worksheet.getRow(destinationRowNum);
-        Row sourceRow = worksheet.getRow(sourceRowNum);
+    private void copyRow(Workbook workbook, Sheet worksheet, int source, int target) {
+        Row newRow = worksheet.getRow(target);
+        Row sourceRow = worksheet.getRow(source);
 
         if (newRow != null) {
             // コピー先に行が既に存在する場合、１行下にずらす
-            worksheet.shiftRows(destinationRowNum, worksheet.getLastRowNum(), 1);
-            newRow = worksheet.createRow(destinationRowNum);
+            worksheet.shiftRows(target, worksheet.getLastRowNum(), 1);
+            newRow = worksheet.createRow(target);
         } else {
             // 存在しない場合は作成
-            newRow = worksheet.createRow(destinationRowNum);
+            newRow = worksheet.createRow(target);
         }
 
         // セルの型、スタイル、値などをすべてコピーする
