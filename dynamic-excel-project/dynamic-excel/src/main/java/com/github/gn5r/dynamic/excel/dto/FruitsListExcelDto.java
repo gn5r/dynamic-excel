@@ -13,10 +13,10 @@ public class FruitsListExcelDto {
     List<FruitsExcelDto> list;
 
     /** 発行日 */
-    @ExcelCell(tags = "issueDate")
+    @ExcelCell(tags = { "issueDate", "発行日" })
     private String issueDate;
 
     /** 発行者 */
-    @ExcelCell(tags = "issuer")
+    @ExcelCell(tags = { "issuer", "発行者" })
     private String issuer;
 }

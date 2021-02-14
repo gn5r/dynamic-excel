@@ -14,5 +14,5 @@ public @interface ExcelCell {
 	/**
 	 * 名前定義されたセル
 	 */
-	String tags() default "";
+	String[] tags() default {};
 }

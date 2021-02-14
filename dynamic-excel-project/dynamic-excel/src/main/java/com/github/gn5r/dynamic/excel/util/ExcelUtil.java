@@ -43,6 +43,11 @@ public class ExcelUtil {
      */
     public static final String EXCEL_EXT_NAME = ".xlsx";
 
+    /**
+     * 果物一覧のテンプレート一覧を取得する
+     * 
+     * @return SelectBox用テンプレート一覧
+     */
     public static List<SelectBoxDto> getTemplateList() {
         // 返却リスト
         List<SelectBoxDto> list = new ArrayList<>();
@@ -119,7 +124,7 @@ public class ExcelUtil {
                 // ExcelCellアノテーションを取得
                 ExcelCell annotation = (ExcelCell) f.getAnnotation(ExcelCell.class);
                 if (annotation != null) {
-                    Name cellName = workbook.getName(annotation.tags());
+                    Name cellName = getName(workbook, annotation.tags());
                     if (cellName != null) {
                         CellReference ref = new CellReference(cellName.getRefersToFormula());
                         ExcelData data = new ExcelData();
@@ -140,6 +145,23 @@ public class ExcelUtil {
         }
 
         return list;
+    }
+
+    /**
+     * 配列のセル名から {@link Name} を取得する
+     * 
+     * @param workbook ワークブック
+     * @param tags     セル名配列
+     * @return {@link Name} オブジェクト
+     */
+    public static Name getName(Workbook workbook, String... tags) {
+        for (String tag : tags) {
+            Name name = workbook.getName(tag);
+            if (name != null) {
+                return name;
+            }
+        }
+        return null;
     }
 
     /**
