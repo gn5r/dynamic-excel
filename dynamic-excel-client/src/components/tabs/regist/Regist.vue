@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import rest from "@/utils/api/rest";
+import axiosBase from "@/utils/api/axiosBase";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -99,7 +99,7 @@ export default {
       const wait = await this.confirm("登録しますか？");
       if (wait) {
         this.setLoading(true);
-        const res = await rest.post("regist", this.form);
+        const res = await axiosBase.post("regist", this.form);
         this.setLoading(false);
         if (res.status) {
           await this.complete("登録しました");

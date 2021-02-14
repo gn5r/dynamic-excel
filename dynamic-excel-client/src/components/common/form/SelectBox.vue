@@ -4,6 +4,7 @@
       label
     }}</span>
     <v-select
+      :class="{ required: required }"
       :value="value"
       :disabled="disabled"
       :readonly="readonly"
@@ -14,6 +15,8 @@
       :items="items"
       :item-text="itemText"
       :item-value="itemValue"
+      :rules="rules"
+      no-data-text="データがありません"
       solo
       dense
       @input="$emit('change', $event)"
@@ -22,6 +25,8 @@
 </template>
 
 <script>
+import validate from "@/utils/form/validate";
+
 export default {
   name: "select-box",
   model: {
@@ -49,12 +54,35 @@ export default {
       default: "id",
       description: "選択された時に返却する値",
     },
+    required: {
+      type: Boolean,
+      default: false,
+    },
   },
-  data: () => ({}),
-  methods: {},
-  created() {},
+  data: () => ({
+    rules: [],
+  }),
+  methods: {
+    setValidate() {
+      if (this.required) {
+        this.rules.push(validate.getValidate("required"));
+      }
+    },
+  },
+  created() {
+    this.setValidate();
+  },
   computed: {},
-  watch: {},
+  watch: {
+    required(v) {
+      const idx = this.rules.findIndex((rule) => rule.name === "required");
+      if (v) {
+        if (idx === -1) this.rules.push(validate.getValidate("required"));
+      } else {
+        if (idx !== -1) this.rules.splice(idx, 1);
+      }
+    },
+  },
   components: {},
 };
 </script>

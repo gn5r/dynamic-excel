@@ -56,7 +56,12 @@ export default {
     tab: null,
   }),
   methods: {
-    ...mapActions("master", ["getOrderList", "getFamilyList", "getGenusList"]),
+    ...mapActions("master", [
+      "getOrderList",
+      "getFamilyList",
+      "getGenusList",
+      "getFruitsListTemplates",
+    ]),
     ...mapActions("app", ["setLoading"]),
   },
   created() {},
@@ -65,6 +70,7 @@ export default {
     this.getOrderList();
     this.getFamilyList();
     this.getGenusList();
+    this.getFruitsListTemplates();
   },
   computed: {
     ...mapState({

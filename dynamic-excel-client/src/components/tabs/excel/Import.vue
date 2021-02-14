@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import rest from "@/utils/api/rest";
+import axiosBase from "@/utils/api/axiosBase";
 
 export default {
   name: "",
@@ -55,7 +55,7 @@ export default {
       const data = new FormData();
       data.append("file", file);
       const headers = { "content-type": "multipart/form" };
-      await rest.post("excel/import", data, headers);
+      await axiosBase.post("excel/import", data, headers);
     },
   },
   created() {},

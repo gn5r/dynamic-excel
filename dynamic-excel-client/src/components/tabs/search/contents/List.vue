@@ -1,9 +1,24 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row justify="center" align="center" no-gutters>
-      <v-col cols="12">
-        <v-btn color="primary" dark outlined @click="output">Excel出力</v-btn>
-      </v-col>
+    <v-form lazy-validation ref="form">
+      <v-row justify="start" align="center">
+        <v-col cols="2">
+          <select-box
+            v-model="form.templateId"
+            label="テンプレート"
+            :items="templates"
+            placeholder="テンプレートを選択"
+            clearable
+            required
+          />
+        </v-col>
+        <v-col cols="2">
+          <v-btn color="primary" dark outlined @click="output">Excel出力</v-btn>
+        </v-col>
+      </v-row>
+    </v-form>
+
+    <v-row justify="start" align="center" no-gutters>
       <v-col cols="12" style="overflow-y: auto">
         <v-card>
           <v-card-text class="pa-0">
@@ -11,7 +26,6 @@
               class="table-striped"
               :headers="headers"
               :items="items"
-              :loading.sync="isLoading"
               loading-text="データ取得中です..."
               hide-default-footer
               no-data-text="データがありません"
@@ -48,9 +62,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import rest from "@/utils/api/rest"
-import { saveAs } from 'file-saver';
+import { mapState, mapActions } from "vuex";
+import rest from "@/utils/api/axiosBase";
+import { get } from "@/utils/api/rest";
+import { saveAs } from "file-saver";
 
 export default {
   name: "list",
@@ -112,6 +127,10 @@ export default {
     ],
     page: 0,
     pageCount: 0,
+    form: {
+      templateId: null,
+      items: [],
+    },
   }),
   methods: {
     async del(id) {
@@ -127,28 +146,46 @@ export default {
       }
     },
 
+    /**
+     * 果物一覧の出力
+     */
     async output() {
+      if (!this.$refs.form.validate()) {
+        return;
+      }
+
       const wait = await this.confirm("Excel出力しますか？");
-      if(wait) {
+      if (wait) {
         const uri = "excel/list";
-        const result = await rest.post(uri, this.items, {responseType: "blob"});
-        if(result.status) {
+        this.form.items = this.items;
+        
+        this.setLoading(true);
+        const result = await rest.post(uri, this.form, {
+          responseType: "blob",
+        });
+
+        this.setLoading(false);
+        if (result.status) {
           const blob = new Blob([result.data]);
           saveAs(blob, "一覧.xlsx");
         }
       }
-    }
+    },
+
+    ...mapActions("app", ["setLoading"]),
   },
   created() {},
   computed: {
     ...mapState({
       isLoading: (state) => state.app.loading,
+      templates: (state) => state.master.fruitsTemplates,
     }),
   },
   watch: {},
-  components: {},
+  components: {
+    SelectBox: () => import("@/components/common/form/SelectBox"),
+  },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

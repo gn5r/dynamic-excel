@@ -1,4 +1,5 @@
-import rest from "@/utils/api/rest";
+import axiosBase from "@/utils/api/axiosBase";
+import { get } from "@/utils/api/rest";
 
 /**
  * マスタデータstore module
@@ -12,6 +13,8 @@ export const master = {
     familyList: [],
     // 属名一覧
     genusList: [],
+    // 果物一覧Excelテンプレート
+    fruitsTemplates: [],
   },
   mutations: {
     // 目名一覧をセットする
@@ -26,6 +29,10 @@ export const master = {
     SET_GENUS_LIST(state, payload) {
       state.genusList = payload;
     },
+    // 果物一覧テンプレートをセットする
+    SET_FRUITS_TEMPLATES(state, payload) {
+      state.fruitsTemplates = payload;
+    },
   },
   actions: {
     /**
@@ -35,13 +42,13 @@ export const master = {
      */
     getOrderList(context) {
       const uri = "/cmnMst/get/orderList";
-      rest
-        .get(uri)
+      get(uri)
         .then((res) => {
+          console.debug("目名取得結果", res);
           context.commit("SET_ORDER_LIST", res.data);
         })
         .catch((err) => {
-          console.error(err);
+          console.error("目名取得結果", err);
           context.commit("SET_ORDER_LIST", []);
         });
     },
@@ -52,7 +59,7 @@ export const master = {
      */
     getFamilyList(context) {
       const uri = "/cmnMst/get/familyList";
-      rest
+      axiosBase
         .get(uri)
         .then((res) => {
           context.commit("SET_FAMILY_LIST", res.data);
@@ -69,7 +76,7 @@ export const master = {
      */
     getGenusList(context) {
       const uri = "/cmnMst/get/genusList";
-      rest
+      axiosBase
         .get(uri)
         .then((res) => {
           context.commit("SET_GENUS_LIST", res.data);
@@ -77,6 +84,23 @@ export const master = {
         .catch((err) => {
           console.error(err);
           context.commit("SET_GENUS_LIST", []);
+        });
+    },
+
+    /**
+     * 果物一覧テンプレートを取得する
+     *
+     * @param {Object} context
+     */
+    getFruitsListTemplates(context) {
+      const uri = "/cmnMst/get/templateList";
+      get(uri)
+        .then((res) => {
+          context.commit("SET_FRUITS_TEMPLATES", res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+          context.commit("SET_FRUITS_TEMPLATES", []);
         });
     },
   },
