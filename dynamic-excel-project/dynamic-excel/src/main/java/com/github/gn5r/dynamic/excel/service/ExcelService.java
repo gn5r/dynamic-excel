@@ -3,7 +3,6 @@ package com.github.gn5r.dynamic.excel.service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -33,7 +32,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -44,15 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ExcelService {
 
     private CreationHelper helper;
-
-    /**
-     * /excel/list/
-     */
-    private String LIST_TEMPLATE_DIR = "/excel/list/";
-    /**
-     * template1.xlsx
-     */
-    private String LIST_TEMPLATE_FINE_NAME = "template1.xlsx";
 
     public Map<String, Object> consoleFileContents(InputStream is) {
         Workbook wb = null;
