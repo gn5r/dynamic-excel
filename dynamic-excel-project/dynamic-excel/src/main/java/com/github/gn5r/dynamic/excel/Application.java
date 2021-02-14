@@ -6,7 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.github.gn5r.dynamic.excel.generator.FQCNBeanNameGenerator;
+import com.github.gn5r.dynamic.excel.common.generator.FQCNBeanNameGenerator;
 
 @SpringBootApplication
 @ComponentScan(nameGenerator = FQCNBeanNameGenerator.class)

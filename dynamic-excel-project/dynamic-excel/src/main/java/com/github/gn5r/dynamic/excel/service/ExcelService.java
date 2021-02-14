@@ -1,6 +1,9 @@
 package com.github.gn5r.dynamic.excel.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -9,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.enums.経費Enum;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
@@ -30,6 +34,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -87,9 +92,9 @@ public class ExcelService {
             map.put("結合セル", joinCell);
 
         } catch (EncryptedDocumentException e) {
-            e.printStackTrace();
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "パスワード付きExcelテンプレートの読み込みに失敗しました");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
         }
 
         return map;
@@ -131,11 +136,12 @@ public class ExcelService {
      * @param dto 果物一覧作成用Dto
      * @return ByteArrayOutputStream
      */
-    public ByteArrayOutputStream createList(FruitsListExcelDto dto) {
+    public ByteArrayOutputStream createList(int templateId, FruitsListExcelDto dto) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            InputStream is = new ClassPathResource(this.LIST_TEMPLATE_DIR + this.LIST_TEMPLATE_FINE_NAME)
-                    .getInputStream();
+            File file = ExcelUtil.getTemplate(templateId);
+
+            InputStream is = new FileInputStream(file);
             Workbook template = WorkbookFactory.create(is);
             Sheet sheet = template.getSheetAt(0);
             log.info(sheet.getSheetName());
@@ -165,8 +171,10 @@ public class ExcelService {
             // 書き込む
             template.setSheetName(0, "果物一覧");
             template.write(out);
-        } catch (IOException | EncryptedDocumentException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
+        } catch (EncryptedDocumentException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "パスワード付きExcelテンプレートの読み込みに失敗しました");
         }
 
         return out;
@@ -174,10 +182,10 @@ public class ExcelService {
 
     /**
      * 
-     * @param workbook          ワークブック
-     * @param worksheet         ワークシート
-     * @param source      コピー元の行インデックス
-     * @param target コピー先の行インデックス
+     * @param workbook  ワークブック
+     * @param worksheet ワークシート
+     * @param source    コピー元の行インデックス
+     * @param target    コピー先の行インデックス
      */
     private void copyRow(Workbook workbook, Sheet worksheet, int source, int target) {
         Row newRow = worksheet.getRow(target);

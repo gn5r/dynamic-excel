@@ -1,4 +1,4 @@
-package com.github.gn5r.dynamic.excel.generator;
+package com.github.gn5r.dynamic.excel.common.generator;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.AnnotationBeanNameGenerator;

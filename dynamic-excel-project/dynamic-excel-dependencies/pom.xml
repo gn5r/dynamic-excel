@@ -81,6 +81,11 @@
 				<artifactId>dynamic-excel-autoconfigure</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.github.gn5r</groupId>
+				<artifactId>dynamic-excel-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>

@@ -1,4 +1,4 @@
-package com.github.gn5r.dynamic.excel.resource;
+package com.github.gn5r.dynamic.excel.common.resource;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

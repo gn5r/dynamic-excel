@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.FruitsDto;
 import com.github.gn5r.dynamic.excel.dto.FruitsExcelDto;
 import com.github.gn5r.dynamic.excel.dto.FruitsListExcelDto;
+import com.github.gn5r.dynamic.excel.resource.FruitsListOutputResource;
 import com.github.gn5r.dynamic.excel.service.ExcelService;
 
 import org.modelmapper.ModelMapper;
@@ -52,18 +54,18 @@ public class ExcelRestController {
             map = excelService.consoleFileContents(file.getInputStream());
             log.info(map.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
         }
 
         return ResponseEntity.ok().body(map);
     }
 
     @RequestMapping(value = "list", method = RequestMethod.POST)
-    public ResponseEntity<?> createList(@RequestBody List<FruitsDto> list) {
+    public ResponseEntity<?> createList(@RequestBody FruitsListOutputResource form) {
 
         List<FruitsExcelDto> excelList = new ArrayList<>();
 
-        for(FruitsDto dto : list) {
+        for (FruitsDto dto : form.getItems()) {
             FruitsExcelDto e = modelMapper.map(dto, FruitsExcelDto.class);
             excelList.add(e);
         }
@@ -74,7 +76,7 @@ public class ExcelRestController {
         excelDto.setIssueDate(now);
         excelDto.setIssuer("system");
 
-        ByteArrayOutputStream out = excelService.createList(excelDto);
+        ByteArrayOutputStream out = excelService.createList(form.getTemplateId(), excelDto);
 
         return new ResponseEntity<byte[]>(out.toByteArray(), HttpStatus.OK);
     }
