@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,18 +49,22 @@ public class ExcelRestController {
     private DateTimeFormatter YMD = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public ResponseEntity<?> excelImport(@RequestPart(value = "file", required = false) MultipartFile file,
+    public ResponseEntity<?> excelImport(@RequestParam(value = "files", required = false) MultipartFile[] files,
             @RequestPart(value = "formData") FormDataResource formData) {
         Map<String, Object> map = new HashMap<>();
 
         log.info(formData.getMessage());
 
-        if (file != null) {
-            try {
-                map = excelService.consoleFileContents(file.getInputStream());
-                log.info(map.toString());
-            } catch (IOException e) {
-                throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (file != null) {
+                    try {
+                        map = excelService.consoleFileContents(file.getInputStream());
+                        log.info(map.toString());
+                    } catch (IOException e) {
+                        throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
+                    }
+                }
             }
         }
 

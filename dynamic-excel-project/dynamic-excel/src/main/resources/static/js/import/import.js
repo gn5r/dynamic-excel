@@ -5,11 +5,14 @@ $(function () {
   });
 
   $("#file").on("change", function () {
-    const file = $(this).prop("files")[0];
-    console.debug(file);
+    const files = $(this).prop("files");
+    console.debug(files);
 
     const data = new FormData();
-    data.append("file", file);
+    Array.from(files).forEach((file, idx) => {
+      console.debug(file);
+      data.append("files", files[idx]);
+    });
     data.append(
       "formData",
       new Blob([JSON.stringify({ message: "こんにちは" })], {
@@ -35,6 +38,8 @@ $(function () {
           console.error(err);
         });
     }
+
+    $(this).val("");
   });
 
   $("#post").on("click", function () {
