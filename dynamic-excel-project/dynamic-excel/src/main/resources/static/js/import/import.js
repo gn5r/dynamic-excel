@@ -10,7 +10,12 @@ $(function () {
 
     const data = new FormData();
     data.append("file", file);
-    data.append("formData", new Blob([JSON.stringify({message: "こんにちは"})], {type: "application/json"}));
+    data.append(
+      "formData",
+      new Blob([JSON.stringify({ message: "こんにちは" })], {
+        type: "application/json",
+      })
+    );
 
     const ajax = {
       url: "api/excel/import",
@@ -30,5 +35,32 @@ $(function () {
           console.error(err);
         });
     }
+  });
+
+  $("#post").on("click", function () {
+    const data = new FormData();
+    data.append(
+      "formData",
+      new Blob([JSON.stringify({ message: "こんにちは" })], {
+        type: "application/json",
+      })
+    );
+
+    const ajax = {
+      url: "api/excel/import",
+      type: "POST",
+      dataType: "json",
+      data: data,
+      contentType: false,
+      processData: false,
+    };
+
+    $.ajax(ajax)
+      .done((result) => {
+        console.debug(result);
+      })
+      .fail((err) => {
+        console.error(err);
+      });
   });
 });
