@@ -27,18 +27,27 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#regist" data-toggle="tab">データ登録</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#import" data-toggle="tab">Excel取込</a>
+                                </li>
                             </ul>
                         </div>
                         <!-- カードボディにそれぞれのタブ内容を記述 -->
                         <div class="card-body tab-content" style="overflow-y: scroll;">
                             <!-- 一覧 -->
                             <div id="list" class="tab-pane active" th:insert="/tab/search/search :: content"></div>
+                            <!-- データ登録 -->
                             <div id="regist" class="tab-pane h-100" th:insert="/tab/regist/regist :: content"></div>
+                            <!-- Excel取込 -->
+                            <div id="import" class="tab-pane" th:insert="/tab/import/import :: content"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- ダイアログ -->
+        <div th:replace="/dialog/details :: content"></div>
     </main>
 
     <!-- フッターを読み込んで書き換え -->

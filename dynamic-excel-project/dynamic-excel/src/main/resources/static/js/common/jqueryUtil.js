@@ -70,7 +70,7 @@ jqueryUtil.rowPush = function (parent = null, regex, row = {}) {
 
   if (parent === null) {
     Object.keys(row).forEach((key) => {
-      tr += "<td>" + row[key] + "</td>";
+      tr += `<td id='${key}'>` + row[key] + "</td>";
     });
     tr += trEnd;
     $(regex).append(tr);
@@ -115,9 +115,9 @@ jqueryUtil.createRow = function (parent = null, regex) {
  * @param {Boolean} rowStart 行開始フラグ。trueの場合はtrが付与される
  * @param {Boolean} rowEnd 行終了フラグ。trueの場合はtrが付与される
  */
-jqueryUtil.colPuth = function (parent = null, regex, col) {
+jqueryUtil.colPuth = function (parent = null, regex, col, id = null) {
   if (parent === null) {
-    let td = "<td>" + col + "</td>";
+    let td = `<td id='${id}'>` + col + "</td>";
     $(regex + " tr:last").append(td);
   } else {
     $(parent)
@@ -128,20 +128,6 @@ jqueryUtil.colPuth = function (parent = null, regex, col) {
         $(this + " tr:last").append(td);
       });
   }
-};
-
-/**
- * 動的に追加したテーブルアイテムのボタンにクリックイベントを付与する
- *
- * @param {String} regex DOM検索条件
- */
-jqueryUtil.addBtnClickFunc = function (regex) {
-  console.debug("ボタンクリックイベントを動的追加");
-  $("body").on("click", regex, function () {
-    console.debug($(regex));
-    const index = $(regex).parent().parent();
-    console.debug("index", index);
-  });
 };
 
 /**

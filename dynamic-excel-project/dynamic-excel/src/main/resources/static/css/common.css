@@ -5,7 +5,7 @@ body {
 
 main {
   height: 90%!important;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 html {
