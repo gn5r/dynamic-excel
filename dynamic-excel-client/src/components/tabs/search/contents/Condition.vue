@@ -98,7 +98,7 @@ export default {
       const uri = "/search";
       this.$emit("search", []);
       this.setLoading(true);
-      const res = await axiosBase.post(uri, this.form);
+      const res = await this.$rest.post(uri, this.form);
       this.setLoading(false);
 
       if (res.status) {

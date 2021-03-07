@@ -12,6 +12,7 @@
                 <v-tab>一覧検索</v-tab>
                 <v-tab>データ登録</v-tab>
                 <v-tab>Excel取込</v-tab>
+                <v-tab>Excelテンプレート編集</v-tab>
               </v-tabs>
             </template>
           </header-bar>
@@ -34,6 +35,9 @@
             </v-tab-item>
             <v-tab-item>
               <excel-import />
+            </v-tab-item>
+            <v-tab-item>
+              <template-edit />
             </v-tab-item>
           </v-tabs-items>
         </v-card>
@@ -83,6 +87,7 @@ export default {
     Search: () => import("@/components/tabs/search/Search"),
     Regist: () => import("@/components/tabs/regist/Regist"),
     ExcelImport: () => import("@/components/tabs/excel/Import"),
+    TemplateEdit: () => import("@/components/tabs/excel/TemplateEdit"),
   },
 };
 </script>
@@ -101,13 +106,13 @@ export default {
 }
 
 .v-tabs-items {
-  height: calc(100% - 48px);
+  height: 100% !important;
 }
 
 .v-tabs-items >>> .v-window__container,
 .v-window-item,
 .search__frame,
 .regist__frame {
-  height: 100%;
+  height: 100% !important;
 }
 </style>

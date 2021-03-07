@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0">
+  <v-container fluid>
     <v-form lazy-validation ref="form">
       <v-row justify="start" align="center">
         <v-col cols="2">
@@ -167,6 +167,7 @@ export default {
         this.setLoading(false);
         if (result.status) {
           const blob = new Blob([result.data]);
+          console.debug(blob)
           saveAs(blob, "一覧.xlsx");
         }
       }

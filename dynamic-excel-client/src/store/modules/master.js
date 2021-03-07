@@ -1,5 +1,4 @@
-import axiosBase from "@/utils/api/axiosBase";
-import { get } from "@/utils/api/rest";
+import { get } from "@gn5r/vue-axios";
 
 /**
  * マスタデータstore module
@@ -59,8 +58,7 @@ export const master = {
      */
     getFamilyList(context) {
       const uri = "/cmnMst/get/familyList";
-      axiosBase
-        .get(uri)
+      get(uri)
         .then((res) => {
           context.commit("SET_FAMILY_LIST", res.data);
         })
@@ -76,8 +74,7 @@ export const master = {
      */
     getGenusList(context) {
       const uri = "/cmnMst/get/genusList";
-      axiosBase
-        .get(uri)
+      get(uri)
         .then((res) => {
           context.commit("SET_GENUS_LIST", res.data);
         })
@@ -93,7 +90,7 @@ export const master = {
      * @param {Object} context
      */
     getFruitsListTemplates(context) {
-      const uri = "/cmnMst/get/templateList";
+      const uri = "/excel/get/templateList";
       get(uri)
         .then((res) => {
           context.commit("SET_FRUITS_TEMPLATES", res.data);

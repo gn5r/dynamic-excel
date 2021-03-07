@@ -59,3 +59,10 @@ html, body {
     background-color: #eeeeee !important;
   }
 }
+
+// v-container直下のrowのmargin-12pxを消す
+.container--fluid {
+  > .row {
+    margin: 0 !important;
+  }
+}

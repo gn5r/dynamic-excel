@@ -1,29 +1,18 @@
 {
   "footer-bar": {
-    "attributes": [],
+    "attributes": [
+      "color",
+      "copyright"
+    ],
     "description": "フッターバー"
   },
   "header-bar": {
     "attributes": [
       "color",
-      "dark",
-      "dense",
       "spacer",
-      "title-text"
+      "title"
     ],
     "description": "ヘッダーバー"
-  },
-  "c-text-field": {
-    "attributes": [
-      "autofocus",
-      "clearable",
-      "dark",
-      "label",
-      "placeholder",
-      "readonly",
-      "value"
-    ],
-    "description": "クリップボード付きテキストフィールド"
   },
   "text-field": {
     "attributes": [
@@ -34,7 +23,10 @@
       "label",
       "placeholder",
       "readonly",
-      "value"
+      "value",
+      "required",
+      "error",
+      "password"
     ],
     "description": "テキストフィールド"
   }

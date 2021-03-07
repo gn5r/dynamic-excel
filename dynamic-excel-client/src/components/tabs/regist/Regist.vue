@@ -129,7 +129,7 @@ export default {
 </script>
 
 <style scoped>
-.regist {
+/* .regist {
   height: 100% !important;
-}
+} */
 </style>

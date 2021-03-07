@@ -19,9 +19,7 @@ export async function get(uri, option = null) {
 
   result = await axios
     .get(uri, option)
-    .then((res) => {
-      return convertResponse(res);
-    })
+    .then((res) => convertResponse(res))
     .catch((err) => {
       throw convertErrorResponse(err);
     });
@@ -29,6 +27,13 @@ export async function get(uri, option = null) {
   return result;
 }
 
+/**
+ * axiosを使用してPOSTリクエストを行う
+ *
+ * @param {String} uri リクエスト先URL
+ * @param {Object} data リクエストボディ
+ * @param {Object} option axiosオプション
+ */
 export async function post(uri, data, option = null) {
   let result = {
     headers: null,
@@ -36,6 +41,15 @@ export async function post(uri, data, option = null) {
     status: false,
     code: null,
   };
+
+  result = await axios
+    .post(uri, data, option)
+    .then((res) => convertResponse(res))
+    .catch((err) => {
+      throw convertErrorResponse(err);
+    });
+
+  return result;
 }
 
 /**
@@ -80,9 +94,11 @@ function convertErrorResponse(error) {
 }
 
 /**
- * ステータスコードを変換する
+ * ステータスコードを取得する。
+ * 引数に与えたステータスコードに値があればそのまま返却し、無ければ400を返却する
  *
  * @param {Number | String} code HTTPステータスコード
+ * @returns {Number | String} HTTPステータスコード
  */
 function getCode(code) {
   if (code !== undefined && code !== null) {

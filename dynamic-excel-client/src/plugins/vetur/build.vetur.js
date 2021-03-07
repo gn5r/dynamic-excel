@@ -2,7 +2,7 @@ process.env.NODE_ENV = "production";
 
 const fs = require("fs");
 const Vue = require("vue");
-const files = require("../../../dist/components.common").default;
+const files = require("../../../dist/components.common");
 
 const hyphenateRE = /\B([A-Z])/g;
 
@@ -104,7 +104,7 @@ function writeJsonFile(obj, file) {
 
 Object.values(files).forEach((key) => {
   if (key !== undefined && key !== null && typeof key !== "function") {
-    const component = key;
+    const component = key.default;
     const name =
       component.name ||
       component

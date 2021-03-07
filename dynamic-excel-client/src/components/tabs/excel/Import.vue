@@ -18,6 +18,9 @@
                   >Excel取込</v-btn
                 >
               </v-col>
+              <v-col>
+                <v-btn color="success" outlined @click="post">POST</v-btn>
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -53,9 +56,12 @@ export default {
       });
 
       const data = new FormData();
-      data.append("file", file);
-      const headers = { "content-type": "multipart/form" };
-      await axiosBase.post("excel/import", data, headers);
+      if(file !== null && file !== undefined) {
+        data.append("file", file);
+      }
+      data.append("formData", new Blob([JSON.stringify({message: "こんにちは"})], {type: "application/json"}));
+      // const headers = { "content-type": "multipart/form-data" };
+      await axiosBase.post("excel/import", data);
     },
   },
   created() {},

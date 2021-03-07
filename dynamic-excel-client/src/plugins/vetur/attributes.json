@@ -1,5 +1,5 @@
 {
-  "header-bar/title-text": {
+  "header-bar/title": {
     "type": "string",
     "description": "タイトルテキスト"
   },
@@ -7,43 +7,15 @@
     "type": "string",
     "description": "ヘッダーバーの色"
   },
-  "header-bar/dark": {
-    "type": "boolean",
-    "description": "ダークモードON/OFFフラグ"
-  },
-  "header-bar/dense": {
-    "type": "boolean",
-    "description": "細く表示"
-  },
   "header-bar/spacer": {
     "type": "boolean",
     "description": "タイトルテキストの右隣のスペースON/OFFフラグ"
   },
-  "c-text-field/value": {
-    "type": "any",
-    "description": ""
-  },
-  "c-text-field/readonly": {
-    "type": "boolean",
-    "description": ""
-  },
-  "c-text-field/autofocus": {
-    "type": "boolean",
-    "description": ""
-  },
-  "c-text-field/clearable": {
-    "type": "boolean",
-    "description": ""
-  },
-  "c-text-field/dark": {
-    "type": "boolean",
-    "description": ""
-  },
-  "c-text-field/placeholder": {
+  "footer-bar/color": {
     "type": "string",
     "description": ""
   },
-  "c-text-field/label": {
+  "footer-bar/copyright": {
     "type": "string",
     "description": ""
   },
@@ -77,6 +49,18 @@
   },
   "text-field/label": {
     "type": "string",
+    "description": ""
+  },
+  "text-field/required": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/error": {
+    "type": "boolean",
+    "description": ""
+  },
+  "text-field/password": {
+    "type": "boolean",
     "description": ""
   }
 }
