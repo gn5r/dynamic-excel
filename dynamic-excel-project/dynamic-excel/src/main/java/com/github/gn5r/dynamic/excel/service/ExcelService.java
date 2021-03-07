@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -85,6 +86,13 @@ public class ExcelService {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "パスワード付きExcelテンプレートの読み込みに失敗しました");
         } catch (IOException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
+        } finally {
+            try {
+                wb.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelファイルのクローズに失敗しました");
+            }
         }
 
         return map;
@@ -285,6 +293,17 @@ public class ExcelService {
         }
     }
 
+    public byte[] getTemplateFile(Integer id) {
+        File file = ExcelUtil.getTemplate(id);
+
+        try {
+            return Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートディレクトリの読み込みに失敗しました");
+        }
+    }
+
     /**
      * 果物一覧を作成する
      * 
@@ -293,11 +312,13 @@ public class ExcelService {
      */
     public ByteArrayOutputStream createList(int templateId, FruitsListExcelDto dto) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Workbook template = null;
+
         try {
             File file = ExcelUtil.getTemplate(templateId);
 
             InputStream is = new FileInputStream(file);
-            Workbook template = WorkbookFactory.create(is);
+            template = WorkbookFactory.create(is);
             Sheet sheet = template.getSheetAt(0);
             log.info(sheet.getSheetName());
 
@@ -330,6 +351,14 @@ public class ExcelService {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
         } catch (EncryptedDocumentException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "パスワード付きExcelテンプレートの読み込みに失敗しました");
+        } finally {
+            try {
+                template.close();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelファイルのクローズに失敗しました");
+            }
         }
 
         return out;

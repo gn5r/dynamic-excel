@@ -3,13 +3,11 @@ package com.github.gn5r.dynamic.excel.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 import com.github.gn5r.dynamic.excel.common.resource.ErrorResource;
 import com.github.gn5r.dynamic.excel.common.resource.SelectBoxResource;
+import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 import com.github.gn5r.dynamic.excel.service.CmnMstService;
-import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -88,24 +86,5 @@ public class CmnMstRestController {
             }
         }
         return new ResponseEntity<List<SelectBoxResource>>(result, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "果物一覧テンプレートファイル一覧の取得", notes = "果物一覧テンプレートファイルの一覧をid,valueの形式で取得します")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "取得に成功しました", response = SelectBoxResource.class, responseContainer = "List"),
-            @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
-    @RequestMapping(value = "templateList", method = RequestMethod.GET)
-    public ResponseEntity<?> getListTemplateFiles() {
-        List<SelectBoxDto> list = ExcelUtil.getTemplateList();
-        List<SelectBoxResource> resultList = new ArrayList<>();
-
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (SelectBoxDto dto : list) {
-                SelectBoxResource e = modelMapper.map(dto, SelectBoxResource.class);
-                resultList.add(e);
-            }
-        }
-
-        return new ResponseEntity<List<SelectBoxResource>>(resultList, HttpStatus.OK);
     }
 }
