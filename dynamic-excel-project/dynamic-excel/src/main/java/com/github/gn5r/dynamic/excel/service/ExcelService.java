@@ -20,6 +20,8 @@ import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil.ExcelData;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -76,7 +78,7 @@ public class ExcelService {
             String cost = this.getCell(sheet, 経費Enum.COST.getCellName(), String.class);
             map.put("金額", cost);
             // 合計
-            Integer total = this.getCell(sheet, 経費Enum.TOTAL.getCellName(), Integer.class);
+            Double total = this.getCell(sheet, 経費Enum.TOTAL.getCellName(), Double.class);
             map.put("合計", total);
             // 結合セル
             Object joinCell = this.getCell(sheet, 経費Enum.JOIN_CELL.getCellName());
@@ -332,6 +334,7 @@ public class ExcelService {
 
             for (int i = 0; i < dto.getList().size(); i++) {
                 List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(i));
+                log.debug("1行データ:" + ToStringBuilder.reflectionToString(dataList.toArray(), ToStringStyle.SHORT_PREFIX_STYLE));
 
                 if (i > 0) {
                     int rowNum = dataList.get(0).getRowNum();

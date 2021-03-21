@@ -96,7 +96,7 @@ public class ExcelRestController {
     @RequestMapping(value = "list", method = RequestMethod.POST)
     public ResponseEntity<?> createList(@RequestBody @Validated FruitsListOutputResource form, BindingResult bindingResult) {
 
-        log.debug("フォームデータ:", ToStringBuilder.reflectionToString(form));
+        log.debug("フォームデータ:" + ToStringBuilder.reflectionToString(form, ToStringStyle.SHORT_PREFIX_STYLE));
 
         if(bindingResult.hasErrors()) {
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
