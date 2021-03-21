@@ -1,10 +1,11 @@
 let jqueryUtil = {};
 
 /**
- * 入力値を取得し、{id, value} の形で返却する
+ * 入力値を取得し、{DOMのid: value} の形で返却する
  *
  * @param {String} parent 親DOMを取得する条件
  * @param {String} regex 取得したいDOMの条件
+ * @returns {Object} マップ
  */
 jqueryUtil.toMap = function (parent = null, regex) {
   let map = {};
@@ -19,6 +20,41 @@ jqueryUtil.toMap = function (parent = null, regex) {
       });
   }
   return map;
+};
+
+/**
+ * テーブルのアイテムを1行あたり{DOMのID: value} 形式にしたリストを返却する
+ *
+ * @param {String} regex 取得したいDOMの条件
+ * @returns {Array} リスト
+ */
+jqueryUtil.getTableItems = function (regex) {
+  let list = [];
+
+  // テーブルの全行を取得
+  const tr = $(`${regex} tr`);
+
+  for (let i = 0; i < tr.length; i++) {
+    // 1行毎のマップデータ
+    let map = {};
+
+    // 1行目から順にth, tdを取得する
+    const cols = tr.eq(i).children();
+    for (let j = 0; j < cols.length; j++) {
+      // tdか判別する
+      if (cols.eq(j).is("td")) {
+        // tdのidとテキストを取得する
+        const td = cols.eq(j);
+        // 操作ボタン以外のテキストをセットする
+        if(td.attr("id") !== "row-action") {
+          map[td.attr("id")] = $(td).text();
+        }
+      }
+    }
+    list.push(map);
+  }
+
+  return list;
 };
 
 /**

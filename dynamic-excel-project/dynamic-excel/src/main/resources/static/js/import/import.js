@@ -13,12 +13,12 @@ $(function () {
       console.debug(file);
       data.append("files", files[idx]);
     });
-    data.append(
-      "formData",
-      new Blob([JSON.stringify({ message: "こんにちは" })], {
-        type: "application/json",
-      })
-    );
+
+    const obj = {
+      message: "hello world"
+    }
+
+    data.append("formData", JSON.stringify(obj));
 
     const ajax = {
       url: "api/excel/import",
@@ -44,12 +44,7 @@ $(function () {
 
   $("#post").on("click", function () {
     const data = new FormData();
-    data.append(
-      "formData",
-      new Blob([JSON.stringify({ message: "こんにちは" })], {
-        type: "application/json",
-      })
-    );
+    data.append("message", "hello");
 
     const ajax = {
       url: "api/excel/import",

@@ -5,21 +5,41 @@
 </head>
 
 <body>
-    <table class="table table-bordered table-hover text-center" th:fragment="content" id="search-list">
-        <thead class="thead-dark" id="search-list-header">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">漢名</th>
-                <th scope="col">かな名</th>
-                <th scope="col">目</th>
-                <th scope="col">科</th>
-                <th scope="col">属</th>
-                <th scope="col">操作</th>
-            </tr>
-        </thead>
-        <tbody id="search-list-body">
-        </tbody>
-    </table>
+    <div th:fragment="content">
+        <div class="container-fluid m-0 p-0">
+            <div class="form-row justify-content-start align-items-center">
+                <div class="form-group col-sm-2">
+                    <select class="form-control" id="print-template-id">
+                        <option value="">テンプレートを選択して下さい</option>
+                        <option th:each="item : ${templateList}" th:value="${item.id}" th:text="${item.value}" />
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <button class="btn btn-outline-success" id="print-list">Excel出力</button>
+                </div>
+            </div>
+
+            <div class="row justify-content-start align-items-center">
+                <div class="col">
+                    <table class="table table-bordered table-hover text-center" id="search-list">
+                        <thead class="thead-dark" id="search-list-header">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">漢名</th>
+                                <th scope="col">かな名</th>
+                                <th scope="col">目</th>
+                                <th scope="col">科</th>
+                                <th scope="col">属</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="search-list-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

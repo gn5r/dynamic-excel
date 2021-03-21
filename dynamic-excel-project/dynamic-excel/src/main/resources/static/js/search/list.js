@@ -20,9 +20,11 @@ List.addItem = function (item = {}) {
   jqueryUtil.colPuth(null, "#search-list-body", item["family"], "row-family");
   jqueryUtil.colPuth(null, "#search-list-body", item["genus"], "row-genus");
 
-  const editBtn = "<button class='btn btn-outline-success' id='item-edit' data-toggle='modal' data-target='#details-dialog'>編集</button>";
-  const delBtn = "<button class='btn btn-outline-danger' id='item-delete'>削除</button>";
-  jqueryUtil.colPuth(null, "#search-list-body", editBtn + delBtn);
+  const editBtn =
+    "<button class='btn btn-outline-success' id='item-edit' data-toggle='modal' data-target='#details-dialog'>編集</button>";
+  const delBtn =
+    "<button class='btn btn-outline-danger' id='item-delete'>削除</button>";
+  jqueryUtil.colPuth(null, "#search-list-body", editBtn + delBtn, "row-action");
 };
 
 /**
@@ -60,5 +62,44 @@ List.addEditBtnClick = function (regex) {
     // }
   });
 };
+
+$(() => {
+  $("#print-list").on("click", () => {
+    const templateId = $("#print-template-id option:selected").val();
+    if (templateId === "") {
+      alert("テンプレートを選択して下さい");
+      return;
+    }
+
+    if (confirm("Excel出力しますか？")) {
+      console.debug("テンプレート選択:", templateId);
+      // テーブルアイテムを取得
+      let items = jqueryUtil.getTableItems("#search-list-body");
+      console.debug("テーブルアイテム:", items);
+
+      const data = {
+        items: items,
+        templateId: templateId,
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "api/excel/list",
+        dataType: "binary",
+        contentType: "application/json",
+        processData: false,
+        data: JSON.stringify(data),
+      })
+        .done((res, status, xhr) => {
+          console.debug(res, status, xhr);
+          const blob = new Blob([res]);
+          saveAs(blob, "一覧.xlsx");
+        })
+        .fail((xhr, status, error) => {
+          console.error(error, status, xhr);
+        });
+    }
+  });
+});
 
 export default List;
