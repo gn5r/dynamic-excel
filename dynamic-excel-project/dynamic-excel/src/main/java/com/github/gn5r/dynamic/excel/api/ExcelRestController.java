@@ -22,17 +22,21 @@ import com.github.gn5r.dynamic.excel.service.ExcelService;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,11 +59,17 @@ public class ExcelRestController {
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * yyyy/MM/dd
+     */
     private DateTimeFormatter YMD = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
+    @ApiOperation(value = "ExcelファイルとリクエストボディのPOSTサンプルAPI", notes = "ファイルとリクエストボディをPOSTし、Excelファイルがあれば特定のセルの値マップを返却します")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "取得に成功しました"),
+            @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "import", method = RequestMethod.POST)
     public ResponseEntity<?> excelImport(@RequestParam(value = "files", required = false) MultipartFile[] files,
-            @RequestPart(value = "formData") FormDataResource formData) {
+            FormDataResource formData) {
         Map<String, Object> map = new HashMap<>();
 
         log.info(formData.getMessage());
@@ -80,8 +90,18 @@ public class ExcelRestController {
         return ResponseEntity.ok().body(map);
     }
 
+    @ApiOperation(value = "果物一覧をダウンロードする", notes = "画面で表示している果物一覧のExcelファイルをダウンロードします")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "取得に成功しました"),
+            @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "list", method = RequestMethod.POST)
-    public ResponseEntity<?> createList(@RequestBody FruitsListOutputResource form) {
+    public ResponseEntity<?> createList(@RequestBody @Validated FruitsListOutputResource form, BindingResult bindingResult) {
+
+        log.debug("フォームデータ:", ToStringBuilder.reflectionToString(form));
+
+        if(bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            throw new RestRuntimeException(HttpStatus.BAD_REQUEST, "パラメータが不正です", fieldErrors);
+        }
 
         List<FruitsExcelDto> excelList = new ArrayList<>();
 
