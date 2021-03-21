@@ -86,13 +86,14 @@ $(() => {
         type: "POST",
         url: "api/excel/list",
         dataType: "binary",
+        responseType: "blob",
         contentType: "application/json",
         processData: false,
         data: JSON.stringify(data),
       })
         .done((res, status, xhr) => {
           console.debug(res, status, xhr);
-          const blob = new Blob([res]);
+          const blob = new Blob([res], { type: "application/octet-stream" });
           saveAs(blob, "一覧.xlsx");
         })
         .fail((xhr, status, error) => {

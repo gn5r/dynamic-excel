@@ -46,8 +46,11 @@ jqueryUtil.getTableItems = function (regex) {
         // tdのidとテキストを取得する
         const td = cols.eq(j);
         // 操作ボタン以外のテキストをセットする
-        if(td.attr("id") !== "row-action") {
-          map[td.attr("id")] = $(td).text();
+        if (td.attr("id") !== "row-action") {
+          const id = td.attr("id").match(/row-(.*)/);
+          if (id[1] !== undefined && id[1] !== null) {
+            map[id[1]] = $(td).text();
+          }
         }
       }
     }
