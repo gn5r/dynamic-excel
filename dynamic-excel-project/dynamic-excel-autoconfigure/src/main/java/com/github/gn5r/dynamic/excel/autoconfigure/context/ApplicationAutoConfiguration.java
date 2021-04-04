@@ -5,12 +5,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 
 /**
- * {@link EnableAutoConfiguration Auto-Configuration} for {@link ApplicationProperty}
+ * {@link EnableAutoConfiguration Auto-Configuration} for
+ * {@link ApplicationProperty}
  *
  * @author gn5r
  */
 @Configuration
 @EnableConfigurationProperties(ApplicationProperty.class)
-public class ApplicationAutoConfigure {
-
+public class ApplicationAutoConfiguration {
 }

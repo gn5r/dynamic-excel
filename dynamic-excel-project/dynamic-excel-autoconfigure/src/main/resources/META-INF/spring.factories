@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.gn5r.dynamic.excel.autoconfigure.context.ApplicationAutoConfiguration,\
 com.github.gn5r.dynamic.excel.autoconfigure.excel.ExcelTemplateAutoConfiguration

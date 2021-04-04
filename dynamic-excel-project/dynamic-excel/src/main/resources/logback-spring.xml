@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+    <property name="FORMAT" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%logger{35}:%line]%msg%n" />
+    <timestamp key="TIME" datePattern="yyyyMMdd-HHmmss" />
+    <springProperty name="LOG_DIR" source="application.logging.dir" />
+    <springProperty name="APP_NAME" source="application.name" />
+
+    <appender name="STDOUT1" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${FORMAT}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_DIR}/${APP_NAME}/${TIME}.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_DIR}/${APP_NAME}/history/${APP_NAME}.%d{yyyy-MM-dd}.log.tar.gz</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${FORMAT}</pattern>
+		</encoder>
+	</appender>
+
+    <!-- デフォルト、H2環境及び開発環境 -->
+    <springProfile name="default, h2, development">
+        <root level="${logging.level.root:-INFO}">
+            <appender-ref ref="STDOUT1" />
+        </root>
+    </springProfile>
+
+    <!-- 本番環境 -->
+    <springProfile name="staging, production">
+        <root level="INFO">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="STDOUT1" />
+        </root>
+    </springProfile>
+</configuration>

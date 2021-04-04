@@ -1,12 +1,17 @@
 package com.github.gn5r.dynamic.excel.autoconfigure.context;
 
+import com.github.gn5r.dynamic.excel.autoconfigure.logging.LoggingProperty;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
 
 /**
  * アプリケーションプロパティ
  *
  * @author gn5r
  */
+@Data
 @ConfigurationProperties(prefix = "application")
 public class ApplicationProperty {
 
@@ -20,19 +25,9 @@ public class ApplicationProperty {
 	 */
 	private String name;
 
-	public String getBasePackage() {
-		return basePackage;
-	}
+	/**
+	 * ログディレクトリ
+	 */
+	private LoggingProperty logging;
 
-	public void setBasePackage(String basePackage) {
-		this.basePackage = basePackage;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 }

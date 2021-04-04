@@ -3,7 +3,6 @@ package com.github.gn5r.dynamic.excel.api;
 import java.util.List;
 
 import com.github.gn5r.dynamic.excel.common.resource.ErrorResource;
-import com.github.gn5r.dynamic.excel.common.resource.SelectBoxResource;
 import com.github.gn5r.dynamic.excel.dto.RegulationListDto;
 import com.github.gn5r.dynamic.excel.service.ListEditService;
 

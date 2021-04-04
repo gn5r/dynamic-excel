@@ -14,4 +14,7 @@ public class FormDataResource implements Serializable {
 
     @ApiModelProperty(value = "メッセージ", name = "メッセージ")
     private String message;
+
+    @ApiModelProperty(value = "ID", name = "ID")
+    private Integer id;
 }

@@ -35,7 +35,7 @@ public class IndexController {
         return ExcelUtil.getTemplateList();
     }
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = {"", "/"})
     public String index(Model model) {
         model.addAttribute("orderList", this.orderList());
         model.addAttribute("familyList", this.familyList());

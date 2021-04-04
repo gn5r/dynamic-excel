@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.github.gn5r.dynamic.excel.dto.RegulationDto;
-import com.github.gn5r.dynamic.excel.dto.RegulationFileDto;
-import com.github.gn5r.dynamic.excel.dto.RegulationListDto;
-
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.github.gn5r.dynamic.excel.dto.RegulationDto;
+import com.github.gn5r.dynamic.excel.dto.RegulationFileDto;
+import com.github.gn5r.dynamic.excel.dto.RegulationListDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +27,7 @@ public class ListEditService {
 
     @Autowired
     private ModelMapper modelMapper;
-    
+
     private List<RegulationDto> createDummyData() {
         List<RegulationDto> list = new ArrayList<>();
 
@@ -51,7 +50,7 @@ public class ListEditService {
     public List<RegulationListDto> getRegurationList() {
         // 返却リスト
         List<RegulationListDto> result = new ArrayList<>();
-        
+
         // 検索結果を受け取った体
         List<RegulationDto> dtoList = this.createDummyData();
 
@@ -65,18 +64,18 @@ public class ListEditService {
             RegulationListDto listDto = modelMapper.map(dto, RegulationListDto.class);
 
             // 未追加
-            if(result.stream().filter(item -> item.getNo() == dto.getNo()).findAny().isEmpty()) {
+            if(result.stream().filter(item -> item.getNo() == dto.getNo()).findAny().isPresent()) {
                 log.info("追加されていないので変換します");
                 // メインファイル
                 Optional<RegulationDto> mainFileOptional = dtoList.stream().filter(item -> item.getNo() == dto.getNo() && item.getDocTypeId().equals("1")).findAny();
-                if(!mainFileOptional.isEmpty()) {
+                if(!mainFileOptional.isPresent()) {
                     RegulationFileDto mainFile = modelMapper.map(mainFileOptional.get(), RegulationFileDto.class);
                     listDto.setMainFile(mainFile);
                 }
 
                 // サブファイル
                 Optional<RegulationDto> subFileOptional = dtoList.stream().filter(item -> item.getNo() == dto.getNo() && item.getDocTypeId().equals("2")).findAny();
-                if(!subFileOptional.isEmpty()) {
+                if(!subFileOptional.isPresent()) {
                     RegulationFileDto subFile = modelMapper.map(subFileOptional.get(), RegulationFileDto.class);
                     listDto.setSubFile(subFile);
                 }

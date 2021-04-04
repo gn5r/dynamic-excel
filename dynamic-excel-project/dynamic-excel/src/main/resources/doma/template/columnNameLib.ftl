@@ -6,5 +6,8 @@
     "属":"genus",
     "登録日":"createDate",
     "更新日":"updateDate",
-    "論理削除フラグ":"delFlg"
+    "論理削除フラグ":"delFlg",
+    "種別名":"typeName",
+    "ファイル名":"fileName",
+    "パス":"path"
 }>
