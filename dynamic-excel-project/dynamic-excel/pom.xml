@@ -96,6 +96,12 @@
 		<dependency>
 			<groupId>org.seasar.doma.boot</groupId>
 			<artifactId>doma-spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.seasar.doma</groupId>
+					<artifactId>doma-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.seasar.doma</groupId>
@@ -136,6 +142,15 @@
 			</resource>
 		</resources>
 
-		<plugins></plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<compilerArgument>-Adao.subpackage=impl</compilerArgument>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>
