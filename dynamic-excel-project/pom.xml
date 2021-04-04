@@ -21,6 +21,8 @@
 	</modules>
 
 	<build>
+		<finalName>dynamic-excel</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

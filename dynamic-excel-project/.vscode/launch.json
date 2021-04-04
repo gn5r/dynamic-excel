@@ -6,7 +6,15 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug",
+            "name": "Debug(Dev)",
+            "request": "launch",
+            "mainClass": "com.github.gn5r.dynamic.excel.Application",
+            "projectName": "dynamic-excel",
+            "vmArgs": "-Dspring.profiles.active=development"
+        },
+        {
+            "type": "java",
+            "name": "Debug(Default)",
             "request": "launch",
             "mainClass": "com.github.gn5r.dynamic.excel.Application",
             "projectName": "dynamic-excel"
