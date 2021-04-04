@@ -1,6 +1,8 @@
 <template>
   <v-app-bar app dark :color="color" :dense="dense">
-    <v-toolbar-title>{{ title }}</v-toolbar-title>
+    <v-toolbar-title>
+      <a @click="top('DynamicExcelMain')">{{ title }}</a>
+    </v-toolbar-title>
     <v-spacer v-if="spacer" />
     <slot name="app-bar-items"></slot>
     <template v-for="(value, name) in $slots" v-slot:[name]>
@@ -25,15 +27,21 @@ export default {
     },
     spacer: {
       type: Boolean,
-      default: true
+      default: true,
     },
     dense: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data: () => ({}),
-  methods: {},
+  methods: {
+    top(target = null) {
+      if(this.$route.name !== target) {
+        this.$router.push({ name: target });
+      }
+    },
+  },
   created() {},
   computed: {},
   watch: {},
@@ -42,4 +50,8 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: #fff;
+}
 </style>

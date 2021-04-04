@@ -26,9 +26,7 @@
               class="table-striped"
               :headers="headers"
               :items="items"
-              loading-text="データ取得中です..."
               hide-default-footer
-              no-data-text="データがありません"
               :page.sync="page"
               :items-per-page="10"
               @page-count="pageCount = $event"

@@ -6,9 +6,13 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "",
-    name: "main",
-    component: () =>
-      import("@/views/DynamicExcel"),
+    name: "DynamicExcelMain",
+    component: () => import("@/views/DynamicExcel"),
+  },
+  {
+    path: "/sample",
+    name: "SampleTop",
+    component: () => import("@/views/SampleTopFrame"),
   },
 ];
 

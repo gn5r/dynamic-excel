@@ -5,6 +5,35 @@
         <!-- タブメニュー -->
         <v-card>
           <header-bar title="dynamic-excel" dense>
+            <template v-slot:app-bar-items>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon @click="to('DynamicExcelMain')">fas fa-home</v-icon>
+                  </v-btn>
+                </template>
+                <span>ホーム</span>
+              </v-tooltip>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon @click="to('SampleTop')">fas fa-table</v-icon>
+                  </v-btn>
+                </template>
+                <span>サンプルページ</span>
+              </v-tooltip>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>fas fa-edit</v-icon>
+                  </v-btn>
+                </template>
+                <span>マスタメンテナンス</span>
+              </v-tooltip>
+            </template>
+
             <template v-slot:extension>
               <v-tabs v-model="tab" center-active dark background-color="blue">
                 <v-tabs-slider color="yellow"></v-tabs-slider>
@@ -12,7 +41,8 @@
                 <v-tab>一覧検索</v-tab>
                 <v-tab>データ登録</v-tab>
                 <v-tab>Excel取込</v-tab>
-                <v-tab>Excelテンプレート編集</v-tab>
+                <v-tab v-if="false">Excelテンプレート編集</v-tab>
+                <v-tab>マスタメンテナンス</v-tab>
               </v-tabs>
             </template>
           </header-bar>
@@ -36,8 +66,11 @@
             <v-tab-item>
               <excel-import />
             </v-tab-item>
-            <v-tab-item>
+            <v-tab-item v-if="false">
               <template-edit />
+            </v-tab-item>
+            <v-tab-item>
+              <mst-mainte />
             </v-tab-item>
           </v-tabs-items>
         </v-card>
@@ -60,6 +93,12 @@ export default {
     tab: null,
   }),
   methods: {
+    to(target = null) {
+      if (this.$route.name !== target) {
+        this.$router.push({ name: target });
+      }
+    },
+
     ...mapActions("master", [
       "getOrderList",
       "getFamilyList",
@@ -88,6 +127,7 @@ export default {
     Regist: () => import("@/components/tabs/regist/Regist"),
     ExcelImport: () => import("@/components/tabs/excel/Import"),
     TemplateEdit: () => import("@/components/tabs/excel/TemplateEdit"),
+    MstMainte: () => import("@/components/tabs/mstMainte/MstMaintenance")
   },
 };
 </script>

@@ -18,6 +18,9 @@
       :dark="dark"
       :placeholder="placeholder"
       :rules="rules"
+      :append-icon="appendIcon"
+      :counter="max"
+      :hide-details="hideDetails"
       ref="text"
       solo
       dense
@@ -42,6 +45,7 @@
       :append-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
       :type="visible ? 'text' : 'password'"
       :rules="rules"
+      hide-details
       solo
       dense
       @click:append="visible = !visible"
@@ -77,6 +81,9 @@ export default {
     required: Boolean,
     error: Boolean,
     password: Boolean,
+    appendIcon: String,
+    max: String,
+    hideDetails: Boolean
   },
   data: () => ({
     visivle: false,

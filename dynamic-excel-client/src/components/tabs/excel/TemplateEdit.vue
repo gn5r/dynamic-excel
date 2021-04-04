@@ -70,9 +70,15 @@ export default {
               "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           });
           this.fileData = { file: blob, name: template.value };
-          console.debug("バイナリ:", res.data)
-        //   const wb = xlsx.read(res.data, { type: "array" });
-        //   console.debug(wb);
+          const wb = xlsx.read(await blob.arrayBuffer(), { type: "array" });
+          console.debug(wb);
+          // 先頭のシート名を取得する
+          const sheetName = wb.SheetNames[0];
+          // シート名からワークシートを取得する
+          const sheet = wb.Sheets[sheetName];
+          // 取得したシートをJSONオブジェクトへ変換
+          const json = xlsx.utils.sheet_to_json(sheet);
+          console.debug("Excelシート:", json);
         }
       }
     },
