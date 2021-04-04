@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  tomcat8:
+    build: ./tomcat
+    container_name: dynamic-excel-tomcat8
+    restart: always
+    ports:
+      - 6553:8080
+    volumes:
+      - ./tomcat/conf:/usr/local/tomcat/conf
+      - ./tomcat/webapps:/usr/local/tomcat/webapps
+      - ./tomcat/logs:/usr/local/tomcat/logs
