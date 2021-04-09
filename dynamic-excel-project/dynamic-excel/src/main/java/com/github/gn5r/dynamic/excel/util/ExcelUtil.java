@@ -13,8 +13,13 @@ import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Name;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -28,7 +33,7 @@ public class ExcelUtil {
     /**
      * Excelテンプレートの保存ディレクトリ
      * <p>
-     * excel/list/
+     * /excel/list/
      * </p>
      */
     public static final String LIST_TEMPLATE_DIR = "/excel/list/";
@@ -37,6 +42,19 @@ public class ExcelUtil {
      * Excelテンプレートprefix
      */
     public static final String LIST_TEMPLATE_PREFIX = "template";
+
+    /**
+     * 詳細Excelテンプレートの保存ディレクトリ
+     * <p>
+     * /excel/detail/
+     * </p>
+     */
+    public static final String DETAIL_TEMPLATE_DIR = "/excel/detail/";
+
+    /**
+     * 詳細Excelテンプレートprefix
+     */
+    public static final String DETAIL_TEMPLATE_PREFIX = "detail";
 
     /**
      * Excelテンプレート拡張子
@@ -105,6 +123,28 @@ public class ExcelUtil {
     }
 
     /**
+     * 詳細テンプレートを取得する
+     * 
+     * @return 詳細テンプレートファイル
+     */
+    public static File getDetailTemplate() {
+        try {
+            String target = DETAIL_TEMPLATE_PREFIX + EXCEL_EXT_NAME;
+            URI targetDir = new ClassPathResource(DETAIL_TEMPLATE_DIR + target).getURI();
+
+            File targetFile = new File(targetDir);
+            if(targetFile.exists()) {
+                return targetFile;
+            }
+        
+        } catch (IOException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートファイルの読み込みに失敗しました");
+        }
+
+        return null;
+    }
+
+    /**
      * 行、列、セル名、値を詰め込んだリストを返却する
      * 
      * @param workbook Excelワークブックオブジェクト
@@ -165,10 +205,79 @@ public class ExcelUtil {
     }
 
     /**
+     * 
+     * @param workbook  ワークブック
+     * @param worksheet ワークシート
+     * @param source    コピー元の行インデックス
+     * @param target    コピー先の行インデックス
+     */
+    public static void copyRow(Workbook workbook, Sheet worksheet, int source, int target) {
+        Row newRow = worksheet.getRow(target);
+        Row sourceRow = worksheet.getRow(source);
+
+        if (newRow != null) {
+            // コピー先に行が既に存在する場合、１行下にずらす
+            worksheet.shiftRows(target, worksheet.getLastRowNum(), 1);
+            newRow = worksheet.createRow(target);
+        } else {
+            // 存在しない場合は作成
+            newRow = worksheet.createRow(target);
+        }
+
+        // セルの型、スタイル、値などをすべてコピーする
+        for (int i = 0; i < sourceRow.getLastCellNum(); i++) {
+            Cell oldCell = sourceRow.getCell(i);
+            Cell newCell = newRow.createCell(i);
+
+            // コピー元の行が存在しない場合、処理を中断
+            if (oldCell == null) {
+                newCell = null;
+                continue;
+            }
+
+            // スタイルのコピー
+            CellStyle newCellStyle = workbook.createCellStyle();
+            newCellStyle.cloneStyleFrom(oldCell.getCellStyle());
+            newCell.setCellStyle(newCellStyle);
+        }
+
+        // セル結合のコピー
+        for (int i = 0; i < worksheet.getNumMergedRegions(); i++) {
+            CellRangeAddress cellRangeAddress = worksheet.getMergedRegion(i);
+            if (cellRangeAddress.getFirstRow() == sourceRow.getRowNum()) {
+                CellRangeAddress newCellRangeAddress = new CellRangeAddress(newRow.getRowNum(),
+                        (newRow.getRowNum() + (cellRangeAddress.getLastRow() - cellRangeAddress.getFirstRow())),
+                        cellRangeAddress.getFirstColumn(), cellRangeAddress.getLastColumn());
+                worksheet.addMergedRegion(newCellRangeAddress);
+            }
+        }
+    }
+
+    /**
+     * 1行のセルにデータをセットする
+     * 
+     * @param sheet   シート
+     * @param rowNum  行インデックス
+     * @param cellNum セルインデックス
+     * @param value   セルに書き込む値
+     */
+    public static void setRowData(Sheet sheet, int rowNum, int cellNum, Object value) {
+        Row newRow = sheet.getRow(rowNum);
+        Cell newCell = newRow.getCell(cellNum);
+
+        if (value instanceof Integer) {
+            newCell.setCellValue(String.valueOf(value));
+        } else if (value instanceof String) {
+            newCell.setCellValue((String) value);
+        }
+    }
+
+    /**
      * 行インデックス、列インデックス、セルの名前定義、値を保持するクラス
      */
     @Data
     public static class ExcelData {
+
         /** 行インデックス */
         private int rowNum;
 

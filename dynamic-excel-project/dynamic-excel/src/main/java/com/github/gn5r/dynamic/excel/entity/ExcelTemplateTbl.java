@@ -20,11 +20,11 @@ public class ExcelTemplateTbl {
     /** 登録順に自動で割り振られるID */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "ID")
     private Integer id;
 
     /** ファイル種別ID */
-    @Column(name = "file_type_id")
+    @Column(name = "FILE_TYPE_ID")
     private Integer fileTypeId;
 
     /** ファイル名 */

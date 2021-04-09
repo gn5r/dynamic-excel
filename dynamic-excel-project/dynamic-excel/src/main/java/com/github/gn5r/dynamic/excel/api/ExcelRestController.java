@@ -42,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -119,6 +120,21 @@ public class ExcelRestController {
         ByteArrayOutputStream out = excelService.createList(form.getTemplateId(), excelDto);
 
         return new ResponseEntity<byte[]>(out.toByteArray(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "果物詳細をダウンロードする", notes = "画面で表示している果物データのExcelファイルをダウンロードします")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "取得に成功しました"),
+            @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> createList(@ApiParam(name = "id", value = "果物ID") @PathVariable("id") Integer id) {
+
+        if(id == null) {
+            throw new RestRuntimeException(HttpStatus.BAD_REQUEST, "果物IDがnullです");
+        }
+
+        final byte[] bytes = excelService.createDetail(id);
+
+        return new ResponseEntity<byte[]>(bytes, HttpStatus.OK);
     }
 
     @ApiOperation(value = "果物一覧テンプレートファイル一覧の取得", notes = "果物一覧テンプレートファイルの一覧をid,valueの形式で取得します")
