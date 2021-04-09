@@ -3,8 +3,6 @@ package com.github.gn5r.dynamic.excel.entity;
 import java.time.LocalDateTime;
 import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
-import org.seasar.doma.GeneratedValue;
-import org.seasar.doma.GenerationType;
 import org.seasar.doma.Id;
 import org.seasar.doma.Table;
 
@@ -19,8 +17,7 @@ public class FileTypeMst {
 
     /** 登録順に自動で割り振られるID */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "ID")
     private Integer id;
 
     /** ファイル種別名 */
@@ -38,4 +35,8 @@ public class FileTypeMst {
     /** 論理削除フラグ */
     @Column(name = "論理削除フラグ")
     private Boolean delFlg;
+
+    /** ファイル種別ごとの保存先パスの接頭辞 */
+    @Column(name = "PREFIX_PATH")
+    private String prefixPath;
 }

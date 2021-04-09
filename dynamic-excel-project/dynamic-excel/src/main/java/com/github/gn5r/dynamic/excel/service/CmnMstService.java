@@ -45,4 +45,13 @@ public class CmnMstService {
     public List<SelectBoxDto> getGenusList() {
         return selectBoxDao.selectGenusList();
     }
+
+    /**
+     * ファイル種別一覧を取得する
+     * 
+     * @return SelectBox用Dtoのファイル種別リスト
+     */
+    public List<SelectBoxDto> getFileTypeList() {
+        return selectBoxDao.selectFileTypeList();
+    }
 }

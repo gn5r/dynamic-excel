@@ -39,4 +39,12 @@ public interface SelectBoxDao {
      */
     @Select
     public List<SelectBoxDto> selectGenusList();
+
+    /**
+     * ファイル種別の一覧を取得する
+     * 
+     * @return SelectBox用Dtoのファイル種別リスト
+     */
+    @Select
+    public List<SelectBoxDto> selectFileTypeList();
 }

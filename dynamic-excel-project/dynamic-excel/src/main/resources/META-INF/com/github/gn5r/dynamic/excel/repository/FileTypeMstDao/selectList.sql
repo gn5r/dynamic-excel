@@ -1,5 +1,5 @@
 select
-  id,
+  ID,
   種別名,
   登録日,
   更新日,
@@ -9,4 +9,4 @@ from
 order by
   更新日 desc,
   登録日 desc,
-  id asc
+  ID ASC

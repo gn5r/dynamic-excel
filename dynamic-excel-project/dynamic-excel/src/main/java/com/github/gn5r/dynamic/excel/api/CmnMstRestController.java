@@ -87,4 +87,22 @@ public class CmnMstRestController {
         }
         return new ResponseEntity<List<SelectBoxResource>>(result, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "ファイル種別一覧の取得", notes = "登録されているファイル種別の一覧をid,valueの形式で取得します")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "取得に成功しました", response = SelectBoxResource.class, responseContainer = "List"),
+            @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
+    @RequestMapping(value = "fileTypeList", method = RequestMethod.GET)
+    public ResponseEntity<?> getFileTypeList() {
+        List<SelectBoxResource> result = new ArrayList<>();
+        List<SelectBoxDto> list = cmnMstService.getFileTypeList();
+
+        if (!list.isEmpty()) {
+            for (SelectBoxDto dto : list) {
+                SelectBoxResource resource = modelMapper.map(dto, SelectBoxResource.class);
+                result.add(resource);
+            }
+        }
+        return new ResponseEntity<List<SelectBoxResource>>(result, HttpStatus.OK);
+    }
 }
