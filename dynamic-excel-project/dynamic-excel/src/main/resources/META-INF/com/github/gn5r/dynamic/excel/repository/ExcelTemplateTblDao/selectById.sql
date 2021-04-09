@@ -1,6 +1,6 @@
 select
-  id,
-  file_type_id,
+  ID,
+  FILE_TYPE_ID,
   ファイル名,
   パス,
   登録日,
@@ -9,4 +9,4 @@ select
 from
   EXCEL_TEMPLATE_TBL
 where
-  id = /* id */1
+  ID = /* id */1
