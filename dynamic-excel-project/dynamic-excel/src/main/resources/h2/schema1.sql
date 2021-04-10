@@ -1,5 +1,5 @@
 create table if not exists `果物` (
-  id int not null primary key auto_increment comment '登録順に自動で割り振られるID',
+  ID int not null primary key auto_increment comment '登録順に自動で割り振られるID',
   `漢字名称` varchar(32) not null comment '果物の漢字名称',
   `一般名称` varchar(64) not null comment '果物の一般的に使用される名称(ひらがな/カタカナ)',
   `目` varchar(16) comment '属している目名',

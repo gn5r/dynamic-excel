@@ -1,5 +1,5 @@
 select
-  id,
+  ID,
   漢字名称,
   一般名称,
   目,
@@ -10,7 +10,7 @@ from
 where
   論理削除フラグ = 0
   /*%if condition.id != null */
-  and id = /* condition.id */1
+  and ID = /* condition.id */1
   /*%end*/
   /*%if @isNotEmpty(condition.kanjiName) */
   and 漢字名称 = /* condition.kanjiName */'a'
@@ -28,5 +28,6 @@ where
   and 属 = /* condition.genus */'a'
   /*%end*/
 order by
-  id,
-  登録日
+  ID asc,
+  更新日 desc,
+  登録日 desc
