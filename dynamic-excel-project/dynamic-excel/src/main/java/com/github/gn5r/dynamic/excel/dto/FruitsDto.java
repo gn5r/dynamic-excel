@@ -10,7 +10,7 @@ import lombok.Data;
 public class FruitsDto {
 
     /** 登録順に自動で割り振られるID */
-    @Column(name = "id")
+    @Column(name = "ID")
     private Integer id;
 
     /** 果物の漢字名称 */

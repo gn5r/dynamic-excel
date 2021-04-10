@@ -18,6 +18,7 @@ import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil.ExcelData;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -31,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class FruitsDetailExcelService {
-    
+
     @Autowired
     private 果物Dao fruitsDao;
 
@@ -52,10 +53,10 @@ public class FruitsDetailExcelService {
     public byte[] createDetail(Integer id) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Workbook template = null;
-        
+
         final 果物 entity = fruitsDao.selectById(id);
 
-        if(entity == null) {
+        if (entity == null) {
             throw new RestRuntimeException(HttpStatus.NOT_FOUND, "果物が見つかりません");
         }
 
@@ -69,33 +70,34 @@ public class FruitsDetailExcelService {
         excelDto.setIssuer("system");
 
         try {
-           File file = ExcelUtil.getDetailTemplate();
-           
-           InputStream is = new FileInputStream(file);
-           template = WorkbookFactory.create(is);
-           Sheet sheet = template.getSheetAt(0);
-           log.info(sheet.getSheetName());
+            File file = ExcelUtil.getDetailTemplate();
 
-           // セルデータを取得
-           List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, excelDto);
-           if(CollectionUtils.isNotEmpty(dataList)) {
-               List<Integer> rowNumList = dataList.stream().map(ExcelData::getRowNum).distinct().collect(Collectors.toList());
-               for(Integer rowNum : rowNumList) {
-                   ExcelUtil.copyRow(template, sheet, rowNum, rowNum);
-               }
+            InputStream is = new FileInputStream(file);
+            template = WorkbookFactory.create(is);
+            Sheet sheet = template.getSheetAt(0);
+            log.info(sheet.getSheetName());
 
-               for(ExcelData data : dataList) {
+            // セルデータを取得
+            List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, excelDto);
+            if (CollectionUtils.isNotEmpty(dataList)) {
+                List<Integer> rowNumList = dataList.stream().map(ExcelData::getRowNum).distinct()
+                        .collect(Collectors.toList());
+                for (Integer rowNum : rowNumList) {
+                    ExcelUtil.copyRow(template, sheet, rowNum, rowNum);
+                }
+
+                for (ExcelData data : dataList) {
                     ExcelUtil.setRowData(sheet, data.getRowNum(), data.getCellNum(), data.getValue());
-               }
-           }
+                }
+            }
 
-           template.setSheetName(0, "果物詳細データ");
-           template.write(out);
-        } catch (IOException e) {
+            template.setSheetName(0, "果物詳細データ");
+            template.write(out);
+        } catch (IOException | InvalidFormatException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
         } finally {
             try {
-                template.close();
+                // template.close();
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();

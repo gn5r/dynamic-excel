@@ -16,6 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -76,9 +77,11 @@ public class FruitsListExcelService {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "Excelテンプレートの読み込みに失敗しました");
         } catch (EncryptedDocumentException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "パスワード付きExcelテンプレートの読み込みに失敗しました");
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
         } finally {
             try {
-                template.close();
+                // template.close();
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();

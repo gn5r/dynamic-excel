@@ -21,6 +21,8 @@
 
 		<maven.test.skip>true</maven.test.skip>
 		<skipTests>true</skipTests>
+
+		<exclude.class.excel-service>**/ExcelService.java</exclude.class.excel-service>
 	</properties>
 
 	<dependencies>
@@ -111,10 +113,6 @@
 		<!-- apache poi -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 		</dependency>
 
@@ -149,6 +147,9 @@
 				<configuration>
 					<encoding>UTF-8</encoding>
 					<compilerArgument>-Adao.subpackage=impl</compilerArgument>
+					<excludes>
+						<exclude>${exclude.class.excel-service}</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

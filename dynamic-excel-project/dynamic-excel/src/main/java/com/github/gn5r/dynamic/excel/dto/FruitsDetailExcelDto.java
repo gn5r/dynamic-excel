@@ -1,7 +1,5 @@
 package com.github.gn5r.dynamic.excel.dto;
 
-import java.time.LocalDateTime;
-
 import com.github.gn5r.dynamic.excel.annotation.ExcelCell;
 
 import lombok.Data;
@@ -13,7 +11,7 @@ import lombok.Data;
 public class FruitsDetailExcelDto {
 
     /** 登録順に自動で割り振られるID */
-    @ExcelCell(tags = "ID")
+    @ExcelCell(tags = { "ID" })
     private Integer id;
 
     /** 果物の漢字名称 */
