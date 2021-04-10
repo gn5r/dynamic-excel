@@ -11,7 +11,10 @@ import org.seasar.doma.jdbc.entity.PreInsertContext;
 import org.seasar.doma.jdbc.entity.PreUpdateContext;
 
 /**
+ * 果物エンティティListener
  * 
+ * @author gn5r
+ * @see 果物
  */
 public class 果物Listener implements EntityListener<果物> {
 

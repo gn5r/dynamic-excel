@@ -15,8 +15,10 @@
 	<property name="sqlFilePattern" value="META-INF/**/*.sql"/>
 	<property name="templatePrimaryDir" value="src/main/resources/doma/template"/>
 	<property name="tableTypes" value="TABLE,VIEW"/>
-	<property name="tableNamePattern" value="果物"/>
+	<property name="tableNamePattern" value="果物|EXCEL_TEMPLATE_TBL|FILE_TYPE_MST"/>
 	<property name="useAccessor" value="false"/>
+	<property name="namingType" value="snake_upper_case"/>
+	<property name="useListener" value="true"/>
 	
 	<path id="classpath">
 		<fileset dir="lib"/>
@@ -42,6 +44,8 @@
 				destdir="${javaDestDir}"
 				packageName="${entityPackageName}"
 				useAccessor="${useAccessor}"
+				namingType="${namingType}"
+				useListener="${useListener}"
 			/>
 			<daoConfig
 				destdir="${javaDestDir}"

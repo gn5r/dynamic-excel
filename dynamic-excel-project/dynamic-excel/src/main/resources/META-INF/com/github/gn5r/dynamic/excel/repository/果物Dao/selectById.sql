@@ -12,4 +12,3 @@ from
   果物
 where
   id = /* id */1
-  and 論理削除フラグ = 0

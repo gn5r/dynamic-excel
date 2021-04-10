@@ -12,9 +12,15 @@ import ${importName};
 </#list>
 
 /**
+<#if entityClassSimpleName??>
+ * ${entityClassSimpleName}エンティティListener
+</#if>
  * 
 <#if lib.author??>
  * @author ${lib.author}
+</#if>
+<#if entityClassSimpleName??>
+ * @see ${entityClassSimpleName}
 </#if>
  */
 public class ${simpleName}<#if superclassSimpleName??> extends ${superclassSimpleName}<${entityClassSimpleName}><#else> implements EntityListener<${entityClassSimpleName}></#if> {

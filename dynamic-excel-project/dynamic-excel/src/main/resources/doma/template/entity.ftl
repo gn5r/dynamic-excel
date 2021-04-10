@@ -4,7 +4,6 @@
 <#function convertDataType dataType>
     <#local result = dataType?replace("Byte", "Integer")>
     <#local result = result?replace("int", "Integer")>
-    <#local result = result?replace("Short", "Integer")>
     <#local result = result?replace("Timestamp", "LocalDateTime")>
     <#return result>
 </#function>
@@ -31,7 +30,11 @@ package ${packageName};
 </#if>
 
 <#list importNames as importName>
+<#-- namingTypeがNONEじゃない場合はColumnをインポートしない -->
+<#if namingType != "NONE" && importName == "org.seasar.doma.Column">
+<#else>
 import ${convertImportClass(importName)};
+</#if>
 </#list>
 
 /**
@@ -72,10 +75,11 @@ public class ${simpleName}<#if superclassSimpleName??> extends ${superclassSimpl
   <#if property.version>
     @Version
   </#if>
-  <#if property.showColumnName && property.columnName??>
+  <#-- namingTypeがNONEじゃない場合はColumnをアノテートしない -->
+  <#if namingType == "NONE" && property.showColumnName && property.columnName??>
     @Column(name = "${property.columnName}")
   </#if>
-    private ${convertDataType(property.propertyClassSimpleName)} ${convertColumnName(property.columnName, property.name)};
+    <#if namingType == "NONE">private<#else>protected</#if> ${convertDataType(property.propertyClassSimpleName)} ${convertColumnName(property.columnName, property.name)};
 </#list>
 <#if originalStatesPropertyName??>
 
@@ -83,26 +87,26 @@ public class ${simpleName}<#if superclassSimpleName??> extends ${superclassSimpl
     @OriginalStates
     ${simpleName} ${originalStatesPropertyName};
 </#if>
-<#--if useAccessor>
+<#if useAccessor>
   <#list ownEntityPropertyDescs as property>
 
     /** 
-     * Returns the ${property.name}.
+     * ${property.name}を取得する
      * 
-     * @return the ${property.name}
+     * @return ${property.name}
      */
-    public ${property.propertyClassSimpleName} get${property.name?cap_first}() {
-        return ${property.name};
+    public ${convertDataType(property.propertyClassSimpleName)} get${convertColumnName(property.columnName, property.name)?cap_first}() {
+        return ${convertColumnName(property.columnName, property.name)};
     }
 
     /** 
-     * Sets the ${property.name}.
+     * ${property.name}を設定する
      * 
-     * @param ${property.name} the ${property.name}
+     * @param ${convertColumnName(property.columnName, property.name)} ${property.name}
      */
-    public void set${property.name?cap_first}(${property.propertyClassSimpleName} ${property.name}) {
-        this.${property.name} = ${property.name};
+    public void set${convertColumnName(property.columnName, property.name)?cap_first}(${convertDataType(property.propertyClassSimpleName)} ${convertColumnName(property.columnName, property.name)}) {
+        this.${convertColumnName(property.columnName, property.name)} = ${convertColumnName(property.columnName, property.name)};
     }
   </#list>
-</#if-->
+</#if>
 }
