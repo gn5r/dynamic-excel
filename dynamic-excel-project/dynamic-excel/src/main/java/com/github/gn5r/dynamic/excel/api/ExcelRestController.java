@@ -1,6 +1,5 @@
 package com.github.gn5r.dynamic.excel.api;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +18,8 @@ import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 import com.github.gn5r.dynamic.excel.resource.FormDataResource;
 import com.github.gn5r.dynamic.excel.resource.FruitsListOutputResource;
 import com.github.gn5r.dynamic.excel.service.ExcelService;
+import com.github.gn5r.dynamic.excel.service.FruitsDetailExcelService;
+import com.github.gn5r.dynamic.excel.service.FruitsListExcelService;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,6 +57,12 @@ public class ExcelRestController {
 
     @Autowired
     private ExcelService excelService;
+
+    @Autowired
+    private FruitsListExcelService fruitsExcelService;
+
+    @Autowired
+    private FruitsDetailExcelService fruitsDetailExcelService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -117,9 +124,9 @@ public class ExcelRestController {
         excelDto.setIssueDate(now);
         excelDto.setIssuer("system");
 
-        ByteArrayOutputStream out = excelService.createList(form.getTemplateId(), excelDto);
+        byte[] bytes = fruitsExcelService.createList(form.getTemplateId(), excelDto);
 
-        return new ResponseEntity<byte[]>(out.toByteArray(), HttpStatus.OK);
+        return new ResponseEntity<byte[]>(bytes, HttpStatus.OK);
     }
 
     @ApiOperation(value = "果物詳細をダウンロードする", notes = "画面で表示している果物データのExcelファイルをダウンロードします")
@@ -132,7 +139,7 @@ public class ExcelRestController {
             throw new RestRuntimeException(HttpStatus.BAD_REQUEST, "果物IDがnullです");
         }
 
-        final byte[] bytes = excelService.createDetail(id);
+        final byte[] bytes = fruitsDetailExcelService.createDetail(id);
 
         return new ResponseEntity<byte[]>(bytes, HttpStatus.OK);
     }
