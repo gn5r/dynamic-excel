@@ -5,16 +5,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
-import com.github.gn5r.dynamic.excel.dto.FruitsListExcelDto;
+import com.github.gn5r.dynamic.excel.dto.excel.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil.ExcelData;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -48,16 +51,30 @@ public class FruitsListExcelService {
 
             // 発行日と発行者をセットする
             List<ExcelData> issue = ExcelUtil.getExcelDataList(template, dto);
+            List<Integer> rowNums = Lists.newArrayList();
+
             if (CollectionUtils.isNotEmpty(issue)) {
                 for (ExcelData data : issue) {
                     ExcelUtil.setRowData(sheet, data.getRowNum(), data.getCellNum(), data.getValue());
+                    if(templateId == 2 && dto.getList().size() > 2 && data.getCellName().matches("フッター.*")) {
+                        rowNums.add(data.getRowNum());
+                    }
+                }
+
+                if(CollectionUtils.isNotEmpty(rowNums)) {
+                    rowNums = rowNums.stream().distinct().collect(Collectors.toList());
+                    log.debug("フッター行番号:" + rowNums);
+
+                    final int start = rowNums.get(0);
+                    final int end = rowNums.get(rowNums.size() - 1);
+
+                    log.debug("start:" + start + ",end:" + end);
+                    sheet.shiftRows(start, end, dto.getList().size() - 1);
                 }
             }
 
+            List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(0));
             for (int i = 0; i < dto.getList().size(); i++) {
-                List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(i));
-                log.debug("1行データ:" + ToStringBuilder.reflectionToString(dataList.toArray(), ToStringStyle.SHORT_PREFIX_STYLE));
-
                 if (i > 0) {
                     int rowNum = dataList.get(0).getRowNum();
                     ExcelUtil.copyRow(template, sheet, rowNum, rowNum + i);

@@ -1,4 +1,4 @@
-package com.github.gn5r.dynamic.excel.dto;
+package com.github.gn5r.dynamic.excel.dto.excel;
 
 import com.github.gn5r.dynamic.excel.annotation.ExcelCell;
 

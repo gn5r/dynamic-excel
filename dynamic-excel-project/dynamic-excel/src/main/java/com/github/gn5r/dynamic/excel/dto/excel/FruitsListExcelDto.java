@@ -1,4 +1,4 @@
-package com.github.gn5r.dynamic.excel.dto;
+package com.github.gn5r.dynamic.excel.dto.excel;
 
 import java.util.List;
 
@@ -19,4 +19,13 @@ public class FruitsListExcelDto {
     /** 発行者 */
     @ExcelCell(tags = { "issuer", "発行者" })
     private String issuer;
+
+    @ExcelCell(tags = { "フッター" })
+    private String footer;
+
+    // @ExcelCell(tags = { "フッタータイトル" })
+    // private String footerTitle;
+
+    // @ExcelCell(tags = { "フッターテキスト" })
+    // private String footerText;
 }

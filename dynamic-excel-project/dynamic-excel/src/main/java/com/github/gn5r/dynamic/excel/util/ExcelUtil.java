@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
@@ -166,20 +167,26 @@ public class ExcelUtil {
                 if (annotation != null) {
                     Name cellName = getName(workbook, annotation.tags());
                     if (cellName != null) {
-                        CellReference ref = new CellReference(cellName.getRefersToFormula());
-                        ExcelData data = new ExcelData();
-                        data.setRowNum(ref.getRow());
-                        data.setCellNum(ref.getCol());
-                        data.setCellName(cellName.getNameName());
-                        data.setValue(value);
-                        list.add(data);
+                        AreaReference areaRef = new AreaReference(cellName.getRefersToFormula(), workbook.getSpreadsheetVersion());
+                        List<CellReference> cells = Arrays.asList(areaRef.getAllReferencedCells());
+                        if(CollectionUtils.isNotEmpty(cells)) {
+                            cells.stream().forEach(ref -> {
+                                ExcelData data = new ExcelData();
+                                data.setRowNum(ref.getRow());
+                                data.setCellNum(ref.getCol());
+                                data.setCellName(cellName.getNameName());
+                                data.setValue(value);
+                                list.add(data);
+                            });
+                        }
                     } else {
-                        log.error(annotation.tags() + "の行が見つかりません");
+                        log.warn(annotation.tags() + "の行が見つかりません");
                     }
                 } else {
-                    log.error("変数【" + f.getName() + "】にはアノテーションが付与されていません");
+                    log.warn("変数【" + f.getName() + "】にはアノテーションが付与されていません");
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
                 log.error("フィールド取得に失敗しました", e);
             }
         }
