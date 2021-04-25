@@ -66,8 +66,14 @@ public class FileTypeMstService {
      * @param dto ファイル種別マスタDto
      */
     public void update(FileTypeMstDto dto) {
-        final FileTypeMst entity = modelMapper.map(dto, FileTypeMst.class);
-        fileTypeMstDao.update(entity);
+        FileTypeMst entity = fileTypeMstDao.selectById(dto.getId());
+        if(entity != null) {
+            entity.setTypeName(dto.getTypeName());
+            entity.setPrefixPath(dto.getPrefixPath());
+            fileTypeMstDao.update(entity);
+        } else {
+            throw new RestRuntimeException(HttpStatus.NOT_FOUND, "指定したIDのファイル種別マスタが見つかりません");
+        }
     }
 
     /**

@@ -35,4 +35,8 @@ public class FileTypeMstDto {
     /** 論理削除フラグ */
     @Column(name = "論理削除フラグ")
     private Boolean delFlg;
+
+    /** PREFIX_PATH */
+    @Column(name = "PREFIX_PATH")
+    private String prefixPath;
 }
