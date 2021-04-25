@@ -6,5 +6,5 @@
   `登録日` datetime comment '登録日',
   `更新日` datetime comment '更新日',
   `論理削除フラグ` tinyint(1) comment '論理削除フラグ',
-  CONSTRAINT `ファイル種別紐づけ` FOREIGN KEY (`file_type_id`) REFERENCES `FILE_TYPE_MST` (`id`)
+  CONSTRAINT `ファイル種別紐づけ` FOREIGN KEY (`FILE_TYPE_ID`) REFERENCES `FILE_TYPE_MST` (`ID`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Excelテンプレートテーブル'
