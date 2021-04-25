@@ -14,6 +14,11 @@ const routes = [
     name: "SampleTop",
     component: () => import("@/views/SampleTopFrame"),
   },
+  {
+    path: "/mstMnt",
+    name: "MstMntTop",
+    component: () => import("@/views/MstMaintenance"),
+  },
 ];
 
 const router = new VueRouter({

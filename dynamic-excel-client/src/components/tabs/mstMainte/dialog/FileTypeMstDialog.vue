@@ -1,10 +1,5 @@
 <template>
-  <v-dialog
-    :value.sync="dialog"
-    max-width="1200"
-    persistent
-    @input="close"
-  >
+  <v-dialog :value.sync="dialog" max-width="1200" persistent @input="close">
     <v-card>
       <v-card-title class="pa-0">
         <v-toolbar dark color="primary" dense>
@@ -39,6 +34,17 @@
                   placeholder="ファイル種別名を入力"
                 />
               </v-col>
+              <v-col cols="5">
+                <text-field
+                  v-model="form.prefixPath"
+                  label="prefixPath"
+                  max="64"
+                  required
+                  clearable
+                  validate-type="path"
+                  placeholder="prefixPathを入力"
+                />
+              </v-col>
             </v-row>
           </v-form>
         </v-container>
@@ -65,7 +71,7 @@
 </template>
 
 <script>
-const rest = require("@gn5r/vue-axios");
+const rest = require("@/utils/api/rest");
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -81,18 +87,12 @@ export default {
   methods: {
     async getDetail() {
       const uri = `/fileTypeMst/get/${this.id}`;
-      const res = await rest
-        .get(uri)
-        .then((res) => {
-          this.setLoading(false);
-          return res;
-        })
-        .catch((err) => {
-          this.setLoading(false);
-          return err;
-        });
+      this.setLoading(true)
+      const res = await rest.get(uri);
+      this.setLoading(false)
 
       if (res.status) {
+        console.debug(res);
         this.form = Object.assign({}, res.data);
       } else {
         console.error("ファイル種別マスタ取得エラー:", res);
@@ -118,12 +118,13 @@ export default {
       const res = await rest
         .post(uri, this.form)
         .then((res) => {
-          this.setLoading(false);
           return res;
         })
         .catch((err) => {
-          this.setLoading(false);
           return err;
+        })
+        .finally(() => {
+          this.setLoading(false);
         });
 
       if (res.status) {
@@ -132,6 +133,7 @@ export default {
         this.close();
       } else {
         console.error("登録エラー:", res);
+        await this.err(res.message);
       }
     },
 
@@ -141,12 +143,13 @@ export default {
       const res = await rest
         .put(uri, this.form)
         .then((res) => {
-          this.setLoading(false);
           return res;
         })
         .catch((err) => {
-          this.setLoading(false);
           return err;
+        })
+        .finally(() => {
+          this.setLoading(false);
         });
 
       if (res.status) {
@@ -155,19 +158,21 @@ export default {
         this.close();
       } else {
         console.error("更新エラー:", res);
+        await this.err(res.message)
       }
     },
 
     close() {
-        this.$emit("update:dialog", false);
+      this.$emit("update:dialog", false);
+      this.$emit("update:id", null);
     },
 
     ...mapActions("app", ["setLoading"]),
   },
   created() {
-      if(this.id !== null) {
-        this.getDetail();
-      }
+    if (this.id !== null) {
+      this.getDetail();
+    }
   },
   computed: {
     saveText() {

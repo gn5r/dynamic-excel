@@ -83,7 +83,11 @@ export default {
     password: Boolean,
     appendIcon: String,
     max: String,
-    hideDetails: Boolean
+    hideDetails: Boolean,
+    validateType: {
+      type: [String, Array],
+      default: () => undefined,
+    },
   },
   data: () => ({
     visivle: false,
@@ -92,7 +96,23 @@ export default {
   methods: {
     setValidate() {
       if (this.required) {
-        this.rules.push(validate.getValidate("required"));
+        if (validate.availableValidate("required")) {
+          this.rules.push(validate.getValidate("required"));
+        }
+      }
+
+      if (this.validateType !== undefined) {
+        if (Array.isArray(this.validateType)) {
+          Array.from(this.validateType).forEach((i, v) => {
+            if (validate.availableValidate(v)) {
+              this.rules.push(validate.getValidate(v));
+            }
+          });
+        } else {
+          if (validate.availableValidate(this.validateType)) {
+            this.rules.push(validate.getValidate(this.validateType));
+          }
+        }
       }
     },
   },

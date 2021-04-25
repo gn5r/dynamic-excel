@@ -1,4 +1,5 @@
-import axios from "@/utils/api/axiosBase";
+const axios = require("@/utils/api/axiosBase");
+const store = require("@/store/index");
 
 let rest = {};
 
@@ -8,21 +9,28 @@ let rest = {};
  * @param {String} uri リクエスト先URL
  * @param {Object} option axiosオプション
  */
-export async function get(uri, option = null) {
+rest.get = async (uri, option = null) => {
   let result = {
-    headers: undefined,
-    data: undefined,
+    /** レスポンスヘッダー */
+    headers: null,
+    /** レスポンスデータ */
+    data: null,
+    /** Http Statusフラグ */
     status: false,
-    code: undefined,
-    message: undefined,
+    /** Http Status Code */
+    code: null,
+    /** レスポンスメッセージ */
+    message: null,
   };
 
-  result = await axios
-    .get(uri, option)
-    .then((res) => convertResponse(res))
-    .catch((err) => {
-      throw convertErrorResponse(err);
-    });
+  if (!getOfflineMode()) {
+    result = await axios
+      .get(uri, option)
+      .then((res) => convertResponse(res))
+      .catch((err) => {
+        throw convertErrorResponse(err)
+      });
+  }
 
   return result;
 }
@@ -34,20 +42,89 @@ export async function get(uri, option = null) {
  * @param {Object} data リクエストボディ
  * @param {Object} option axiosオプション
  */
-export async function post(uri, data, option = null) {
+rest.post = async (uri, data, option = null) => {
   let result = {
+    /** レスポンスヘッダー */
     headers: null,
+    /** レスポンスデータ */
     data: null,
+    /** Http Statusフラグ */
     status: false,
+    /** Http Status Code */
     code: null,
+    /** レスポンスメッセージ */
+    message: null,
   };
 
   result = await axios
     .post(uri, data, option)
     .then((res) => convertResponse(res))
-    .catch((err) => {
-      throw convertErrorResponse(err);
-    });
+    .catch((err) => convertErrorResponse(err));
+
+  return result;
+}
+
+/**
+ * axiosを使用してPUTリクエストを行う
+ *
+ * @param {String} uri リクエスト先URL
+ * @param {Object} data リクエストボディ
+ * @param {Object} option axiosオプション
+ */
+rest.put = async (uri, data, option = null) => {
+  let result = {
+    /** レスポンスヘッダー */
+    headers: null,
+    /** レスポンスデータ */
+    data: null,
+    /** Http Statusフラグ */
+    status: false,
+    /** Http Status Code */
+    code: null,
+    /** レスポンスメッセージ */
+    message: null,
+  };
+
+  if (!getOfflineMode()) {
+    result = await axios
+      .put(uri, data, option)
+      .then((res) => convertResponse(res))
+      .catch((err) => {
+        throw convertErrorResponse(err);
+      });
+  }
+
+  return result;
+}
+
+/**
+ * axiosを使用してDELETEリクエストを行う
+ *
+ * @param {String} uri リクエスト先URL
+ * @param {Object} option axiosオプション
+ */
+rest.del = async (uri, option = null) => {
+  let result = {
+    /** レスポンスヘッダー */
+    headers: null,
+    /** レスポンスデータ */
+    data: null,
+    /** Http Statusフラグ */
+    status: false,
+    /** Http Status Code */
+    code: null,
+    /** レスポンスメッセージ */
+    message: null,
+  };
+
+  if (!getOfflineMode()) {
+    result = await axios
+      .del(uri, option)
+      .then((res) => convertResponse(res))
+      .catch((err) => {
+        throw convertErrorResponse(err);
+      });
+  }
 
   return result;
 }
@@ -74,22 +151,27 @@ function convertResponse(response) {
  * @param {Object} error エラーレスポンス
  */
 function convertErrorResponse(error) {
-  if (error.toJSON()) {
-    console.error(error.toJSON());
-    const json = error.toJSON();
+  // オフラインモードフラグをtrueにする
+  setOfflineMode();
+
+  if (error.response) {
+    console.error(error.response);
+    const res = error.response;
+    return {
+      headers: res.headers,
+      data: res.data,
+      status: false,
+      code: getCode(res.status),
+      message: res.data.message
+    }
+  } else {
     return {
       headers: null,
-      data: undefined,
+      data: {},
       status: false,
-      code: getCode(json.code),
-      message: json.message,
-    };
-  } else if (error.response) {
-    console.error(error.response);
-  } else if (error.request) {
-    console.error(error.request);
-  } else {
-    console.error(error.message);
+      code: 500,
+      message: "サーバー内エラーが発生しました"
+    }
   }
 }
 
@@ -100,7 +182,7 @@ function convertErrorResponse(error) {
  * @param {Number | String} code HTTPステータスコード
  * @returns {Number | String} HTTPステータスコード
  */
-function getCode(code) {
+function getCode(code = null) {
   if (code !== undefined && code !== null) {
     return code;
   } else {
@@ -109,4 +191,22 @@ function getCode(code) {
   }
 }
 
-export default rest;
+/**
+ * オフラインモードフラグを取得する
+ *
+ * @returns オフラインモードフラグ
+ */
+function getOfflineMode() {
+  return store.default.getters["app/GET_OFFLINE_MODE"];
+}
+
+/**
+ * オフラインモードでなければフラグをtrueにする
+ */
+function setOfflineMode() {
+  if (!getOfflineMode()) {
+    store.default.dispatch("app/setOfflineMode", true);
+  }
+}
+
+module.exports = rest;

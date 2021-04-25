@@ -70,7 +70,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import axiosBase from "@/utils/api/axiosBase";
+const rest = require("@/utils/api/rest");
 
 export default {
   name: "condition",
@@ -98,8 +98,13 @@ export default {
       const uri = "/search";
       this.$emit("search", []);
       this.setLoading(true);
-      const res = await this.$rest.post(uri, this.form);
-      this.setLoading(false);
+      const res = await rest
+        .post(uri, this.form)
+        .then((res) => res)
+        .catch((err) => err)
+        .finally(() => {
+          this.setLoading(false);
+        });
 
       if (res.status) {
         console.debug(res.data.result);
@@ -125,5 +130,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

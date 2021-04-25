@@ -27,7 +27,7 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn icon v-on="on">
-                    <v-icon>fas fa-edit</v-icon>
+                    <v-icon @click="to('MstMntTop')">fas fa-edit</v-icon>
                   </v-btn>
                 </template>
                 <span>マスタメンテナンス</span>
@@ -42,7 +42,7 @@
                 <v-tab>データ登録</v-tab>
                 <v-tab>Excel取込</v-tab>
                 <v-tab v-if="false">Excelテンプレート編集</v-tab>
-                <v-tab>マスタメンテナンス</v-tab>
+                <v-tab>テンプレートアップロード</v-tab>
               </v-tabs>
             </template>
           </header-bar>
@@ -50,18 +50,10 @@
           <!-- タブコンテンツ -->
           <v-tabs-items v-model="tab">
             <v-tab-item>
-              <v-card>
-                <search class="search__frame" />
-              </v-card>
+              <search class="v__tab__contents__frame" />
             </v-tab-item>
             <v-tab-item>
-              <v-card>
-                <regist
-                  v-if="tab === 1"
-                  class="regist__frame"
-                  @regist="tab = 0"
-                />
-              </v-card>
+              <regist v-if="tab === 1" @regist="tab = 0" />
             </v-tab-item>
             <v-tab-item>
               <excel-import />
@@ -70,12 +62,22 @@
               <template-edit />
             </v-tab-item>
             <v-tab-item>
-              <mst-mainte />
+              <template-upload />
             </v-tab-item>
           </v-tabs-items>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- confirm -->
+    <v-confirm
+      :dialog.sync="confirmObj.dialog"
+      :title="confirmObj.title"
+      :title-icon="confirmObj.titleIcon"
+      :title-color="confirmObj.titleColor"
+      :message="confirmObj.message"
+      :buttons="confirmObj.buttons"
+    />
 
     <!-- Loading -->
     <loading :active.sync="isLoading" />
@@ -83,31 +85,27 @@
 </template>
 
 <script>
+import mixin from "@/utils/script/mixin";
 import { mapActions, mapState } from "vuex";
 
 export default {
   name: "",
-  mixins: [],
+  mixins: [mixin],
   props: {},
   data: () => ({
     tab: null,
   }),
   methods: {
-    to(target = null) {
-      if (this.$route.name !== target) {
-        this.$router.push({ name: target });
-      }
-    },
-
     ...mapActions("master", [
       "getOrderList",
       "getFamilyList",
       "getGenusList",
       "getFruitsListTemplates",
     ]),
-    ...mapActions("app", ["setLoading"]),
+    ...mapActions("app", ["setOfflineMode"]),
   },
-  created() {},
+  created() {
+  },
   mounted() {
     this.setLoading(false);
     this.getOrderList();
@@ -117,42 +115,28 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoading: (state) => state.app.loading,
+      offlineMode: (state) => state.app.offlineMode,
     }),
   },
-  watch: {},
+  watch: {
+    // async offlineMode(mode) {
+    //   if (mode) {
+    //     const wait = await this.confirm(
+    //       "ネットワークエラーが発生しました。\nオフラインモードを有効にしますか？"
+    //     );
+    //     this.setOfflineMode(wait);
+    //   }
+    // }
+  },
   components: {
     HeaderBar: () => import("@/components/common/HeaderBar"),
     Search: () => import("@/components/tabs/search/Search"),
     Regist: () => import("@/components/tabs/regist/Regist"),
     ExcelImport: () => import("@/components/tabs/excel/Import"),
     TemplateEdit: () => import("@/components/tabs/excel/TemplateEdit"),
-    MstMainte: () => import("@/components/tabs/mstMainte/MstMaintenance")
+    TemplateUpload: () => import("@/components/tabs/excel/TemplateUpload"),
   },
 };
 </script>
 
-<style scoped>
-/* メインコンテンツ下の高さを100%にする */
-.dynamic_excel_main {
-  height: 100% !important;
-  padding: 0px !important;
-}
-
-.dynamic_excel_main >>> .row,
-.col,
-.v-card {
-  height: inherit;
-}
-
-.v-tabs-items {
-  height: 100% !important;
-}
-
-.v-tabs-items >>> .v-window__container,
-.v-window-item,
-.search__frame,
-.regist__frame {
-  height: 100% !important;
-}
-</style>
+<style scoped></style>

@@ -160,7 +160,7 @@ export default {
         this.setLoading(true);
         const result = await rest.post(uri, this.form, {
           responseType: "blob",
-        });
+        }).then(res => res).catch(err => err);
 
         this.setLoading(false);
         if (result.status) {

@@ -8,16 +8,28 @@ export const app = {
     devMode: false,
     // ローディング
     loading: false,
+    // オフラインモード
+    offlineMode: false,
   },
   mutations: {
-    // 開発モードをセットする
+    // 開発モードフラグをセットする
     SET_DEV_MODE(state, payload) {
       state.devMode = payload;
     },
-    // ローディングをセットする
+    // ローディングフラグをセットする
     SET_LOADING(state, payload) {
       state.loading = payload;
     },
+    // オフラインモードフラグをセットする
+    SET_OFFLINE_MODE(state, payload) {
+      state.offlineMode = payload;
+    },
+  },
+  getters: {
+    // オフラインモードフラグを取得する
+    GET_OFFLINE_MODE(state) {
+      return state.offlineMode;
+    }
   },
   actions: {
     /**
@@ -29,6 +41,7 @@ export const app = {
     setDevMode(context, payload) {
       context.commit("SET_DEV_MODE", payload);
     },
+
     /**
      * ローディングフラグをセットする
      *
@@ -37,6 +50,16 @@ export const app = {
      */
     setLoading(context, payload) {
       context.commit("SET_LOADING", payload);
+    },
+
+    /**
+     * オフラインモードのフラグをセットする
+     *
+     * @param {Object} context コンテキスト
+     * @param {Boolean} payload オフラインモードフラグ
+     */
+    setOfflineMode(context = {}, payload = false) {
+      context.commit("SET_OFFLINE_MODE", payload);
     },
   },
 };

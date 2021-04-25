@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row justify="center" align="center" no-gutters>
-      <v-col cols="8">
+      <v-col>
         <v-card>
           <v-card-title>
             <v-container fluid>
@@ -79,7 +79,7 @@
     <file-type-mst-dialog
       v-if="fileTypeMstDialog"
       :dialog.sync="fileTypeMstDialog"
-      :id="fileTypeId"
+      :id.sync="fileTypeId"
       @done="getList"
     />
 
@@ -97,6 +97,7 @@
 
 <script>
 const rest = require("@gn5r/vue-axios");
+const DateUtil = require("@/utils/script/DateUtil");
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -154,12 +155,15 @@ export default {
 
       if (res.status) {
         this.items = [];
-        Array.from(res.data).forEach((data) => {
+        this.items = res.data;
+        Array.from(this.items).forEach((data) => {
           Object.keys(data).map((key) => {
             data["status"] = data["delFlg"] ? "論理削除" : "アクティブ";
+            const YMDHMS = "YYYY/MM/DD HH:mm:ss";
+            data["createDate"] = DateUtil.format(data["createDate"], YMDHMS);
+            data["updateDate"] = DateUtil.format(data["updateDate"], YMDHMS);
           });
           console.debug(data);
-          this.items.push(data);
         });
       } else {
         console.error("ファイル種別マスタ取得エラー:", res);

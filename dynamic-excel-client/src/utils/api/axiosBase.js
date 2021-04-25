@@ -94,4 +94,4 @@ rest.del = (url, option = null) => {
   });
 };
 
-export default rest;
+module.exports = rest;

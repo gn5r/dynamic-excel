@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve:local": "vue-cli-service serve --mode local",
+    "serve:dev": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --mode local",
     "lint": "vue-cli-service lint",
     "docgen": "node ./src/docgen.js"
@@ -15,6 +16,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "file-saver": "^2.0.5",
+    "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.5.1",

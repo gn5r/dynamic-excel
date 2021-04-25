@@ -1,4 +1,5 @@
-import { get } from "@gn5r/vue-axios";
+import { cmnMst, excel } from "@/utils/api/uriList"
+import { get } from "@/utils/api/rest"
 
 /**
  * マスタデータstore module
@@ -14,6 +15,8 @@ export const master = {
     genusList: [],
     // 果物一覧Excelテンプレート
     fruitsTemplates: [],
+    // ファイル種別一覧
+    fileTypeList: []
   },
   mutations: {
     // 目名一覧をセットする
@@ -32,6 +35,9 @@ export const master = {
     SET_FRUITS_TEMPLATES(state, payload) {
       state.fruitsTemplates = payload;
     },
+    SET_FILE_TYPE_LIST(state, payload) {
+      state.fileTypeList = payload;
+    }
   },
   actions: {
     /**
@@ -40,14 +46,13 @@ export const master = {
      * @param {Object} context コンテキスト
      */
     getOrderList(context) {
-      const uri = "/cmnMst/get/orderList";
+      const uri = cmnMst.GET_ORDER_LIST;
       get(uri)
         .then((res) => {
-          console.debug("目名取得結果", res);
           context.commit("SET_ORDER_LIST", res.data);
         })
         .catch((err) => {
-          console.error("目名取得結果", err);
+          console.error("目名取得エラー:", err)
           context.commit("SET_ORDER_LIST", []);
         });
     },
@@ -57,13 +62,12 @@ export const master = {
      * @param {Object} context コンテキスト
      */
     getFamilyList(context) {
-      const uri = "/cmnMst/get/familyList";
+      const uri = cmnMst.GET_FAMILY_LIST;
       get(uri)
         .then((res) => {
           context.commit("SET_FAMILY_LIST", res.data);
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
           context.commit("SET_FAMILY_LIST", []);
         });
     },
@@ -73,13 +77,12 @@ export const master = {
      * @param {Object} context コンテキスト
      */
     getGenusList(context) {
-      const uri = "/cmnMst/get/genusList";
+      const uri = cmnMst.GET_GENUS_LIST;
       get(uri)
         .then((res) => {
           context.commit("SET_GENUS_LIST", res.data);
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
           context.commit("SET_GENUS_LIST", []);
         });
     },
@@ -90,15 +93,24 @@ export const master = {
      * @param {Object} context
      */
     getFruitsListTemplates(context) {
-      const uri = "/excel/get/templateList";
+      const uri = excel.GET_TEMPLATE_LIST;
       get(uri)
         .then((res) => {
           context.commit("SET_FRUITS_TEMPLATES", res.data);
         })
-        .catch((err) => {
-          console.error(err);
+        .catch(() => {
           context.commit("SET_FRUITS_TEMPLATES", []);
         });
     },
+
+    /**
+     * ファイル種別一覧をセットする
+     * 
+     * @param {Object} context コンテキスト
+     * @param {Array} payload ファイル種別一覧
+     */
+    setFileTypeList(context, payload) {
+      context.commit("SET_FILE_TYPE_LIST", payload);
+    }
   },
 };
