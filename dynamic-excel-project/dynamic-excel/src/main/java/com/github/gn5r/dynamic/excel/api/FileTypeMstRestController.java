@@ -64,8 +64,8 @@ public class FileTypeMstRestController {
             @ApiResponse(code = 200, message = "取得に成功しました", response = FileTypeMstResource.class, responseContainer = "Set"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "get/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getDetail(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") Integer id) {
-        final FileTypeMstDto dto = fileTypeMstService.getDetail(id);
+    public ResponseEntity<?> getDetail(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") String id) {
+        final FileTypeMstDto dto = fileTypeMstService.getDetail(Integer.parseInt(id));
 
         FileTypeMstResource result = modelMapper.map(dto, FileTypeMstResource.class);
 
@@ -89,11 +89,11 @@ public class FileTypeMstRestController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "更新に成功しました"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "update/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") Integer id,
+    public ResponseEntity<?> update(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") String id,
             @ApiParam(name = "FileTypeMstFormResource", value = "ファイル種別マスタ登録編集リソース") @RequestBody FileTypeMstFormResource form) {
 
         FileTypeMstDto dto = modelMapper.map(form, FileTypeMstDto.class);
-        dto.setId(id);
+        dto.setId(Integer.parseInt(id));
         fileTypeMstService.update(dto);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -103,9 +103,9 @@ public class FileTypeMstRestController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "論理削除に成功しました"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") Integer id) {
+    public ResponseEntity<?> delete(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") String id) {
 
-        fileTypeMstService.delete(id);
+        fileTypeMstService.delete(Integer.parseInt(id));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -114,9 +114,9 @@ public class FileTypeMstRestController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "復活に成功しました"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "restore/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> restore(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") Integer id) {
+    public ResponseEntity<?> restore(@ApiParam(name = "ID", value = "ファイル種別マスタID") @PathVariable("id") String id) {
 
-        fileTypeMstService.restore(id);
+        fileTypeMstService.restore(Integer.parseInt(id));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

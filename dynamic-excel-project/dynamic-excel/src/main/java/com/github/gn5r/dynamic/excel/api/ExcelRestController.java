@@ -12,9 +12,9 @@ import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.common.resource.ErrorResource;
 import com.github.gn5r.dynamic.excel.common.resource.SelectBoxResource;
 import com.github.gn5r.dynamic.excel.dto.FruitsDto;
-import com.github.gn5r.dynamic.excel.dto.FruitsExcelDto;
-import com.github.gn5r.dynamic.excel.dto.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
+import com.github.gn5r.dynamic.excel.dto.excel.FruitsExcelDto;
+import com.github.gn5r.dynamic.excel.dto.excel.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.resource.FormDataResource;
 import com.github.gn5r.dynamic.excel.resource.FruitsListOutputResource;
 import com.github.gn5r.dynamic.excel.service.ExcelService;
@@ -23,6 +23,7 @@ import com.github.gn5r.dynamic.excel.service.FruitsListExcelService;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.modelmapper.ModelMapper;
@@ -48,7 +49,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = "ExcelRESTコントローラー")
+@Api(tags = "ExcelRESTコントローラー", description = "Excel出力APIを列挙")
 @RestController
 @RequestMapping(value = "api/excel")
 @CrossOrigin
@@ -133,13 +134,13 @@ public class ExcelRestController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "取得に成功しました"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "detail/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> createList(@ApiParam(name = "id", value = "果物ID") @PathVariable("id") Integer id) {
+    public ResponseEntity<?> createList(@ApiParam(name = "id", value = "果物ID") @PathVariable("id") String id) {
 
-        if(id == null) {
+        if(StringUtils.isEmpty(id)) {
             throw new RestRuntimeException(HttpStatus.BAD_REQUEST, "果物IDがnullです");
         }
 
-        final byte[] bytes = fruitsDetailExcelService.createDetail(id);
+        final byte[] bytes = fruitsDetailExcelService.createDetail(Integer.parseInt(id));
 
         return new ResponseEntity<byte[]>(bytes, HttpStatus.OK);
     }
@@ -160,6 +161,14 @@ public class ExcelRestController {
             }
         }
 
+        List<SelectBoxDto> templateList = excelService.getTemplateList();
+        if(CollectionUtils.isNotEmpty(templateList)) {
+            for(SelectBoxDto dto : templateList) {
+                SelectBoxResource e = modelMapper.map(dto, SelectBoxResource.class);
+                resultList.add(e);
+            }
+        }
+
         return new ResponseEntity<List<SelectBoxResource>>(resultList, HttpStatus.OK);
     }
 
@@ -167,7 +176,12 @@ public class ExcelRestController {
     @ApiResponses(value = { @ApiResponse(code = 200, message = "取得に成功しました"),
             @ApiResponse(code = 500, message = "サーバー内エラーが発生しました", response = ErrorResource.class, responseContainer = "Set") })
     @RequestMapping(value = "get/templateFile/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getTemplateFileById(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<?> getTemplateFileById(@PathVariable(name = "id") String id) {
+
+        if(StringUtils.isEmpty(id)) {
+            throw new RestRuntimeException(HttpStatus.BAD_REQUEST, "テンプレートIDがnullです");
+        }
+
         byte[] bytes = excelService.getTemplateFile(id);
 
         return new ResponseEntity<byte[]>(bytes, HttpStatus.OK);

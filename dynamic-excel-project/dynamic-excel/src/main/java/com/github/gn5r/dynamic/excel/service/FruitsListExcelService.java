@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.github.gn5r.dynamic.excel.Enum.ExcelFileEnum;
 import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.excel.FruitsListExcelDto;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
@@ -37,7 +35,7 @@ public class FruitsListExcelService {
      * @param dto 果物一覧作成用Dto
      * @return ByteArrayOutputStream
      */
-    public byte[] createList(int templateId, FruitsListExcelDto dto) {
+    public byte[] createList(String templateId, FruitsListExcelDto dto) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Workbook template = null;
 
@@ -56,7 +54,7 @@ public class FruitsListExcelService {
             if (CollectionUtils.isNotEmpty(issue)) {
                 for (ExcelData data : issue) {
                     ExcelUtil.setRowData(sheet, data.getRowNum(), data.getCellNum(), data.getValue());
-                    if(templateId == 2 && dto.getList().size() > 2 && data.getCellName().matches("フッター.*")) {
+                    if(templateId.equals(ExcelFileEnum.LIST_TEMPLATE_2_ID.getValue()) && dto.getList().size() > 2 && data.getCellName().matches("フッター.*")) {
                         rowNums.add(data.getRowNum());
                     }
                 }
@@ -73,8 +71,9 @@ public class FruitsListExcelService {
                 }
             }
 
-            List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(0));
             for (int i = 0; i < dto.getList().size(); i++) {
+                List<ExcelData> dataList = ExcelUtil.getExcelDataList(template, dto.getList().get(i));
+
                 if (i > 0) {
                     int rowNum = dataList.get(0).getRowNum();
                     ExcelUtil.copyRow(template, sheet, rowNum, rowNum + i);

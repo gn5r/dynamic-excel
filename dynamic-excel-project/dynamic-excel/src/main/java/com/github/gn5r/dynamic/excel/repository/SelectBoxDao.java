@@ -47,4 +47,12 @@ public interface SelectBoxDao {
      */
     @Select
     public List<SelectBoxDto> selectFileTypeList();
+
+    /**
+     * アップロードしたExcelテンプレートの一覧を取得する
+     * 
+     * @return SelectBox用DtoのExcelテンプレートリスト
+     */
+    @Select
+    public List<SelectBoxDto> selectTemplateList();
 }

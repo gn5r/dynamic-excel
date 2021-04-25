@@ -54,4 +54,13 @@ public class CmnMstService {
     public List<SelectBoxDto> getFileTypeList() {
         return selectBoxDao.selectFileTypeList();
     }
+
+    /**
+     * アップロードしたExcelテンプレートファイルの一覧を取得する
+     * 
+     * @return SelectBox用DtoのExcelテンプレートリスト
+     */
+    public List<SelectBoxDto> getTemplateFileList() {
+        return selectBoxDao.selectTemplateList();
+    }
 }

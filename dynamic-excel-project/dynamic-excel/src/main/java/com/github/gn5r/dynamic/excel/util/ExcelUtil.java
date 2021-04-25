@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.github.gn5r.dynamic.excel.Enum.ExcelFileEnum;
 import com.github.gn5r.dynamic.excel.annotation.ExcelCell;
 import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
@@ -83,15 +84,15 @@ public class ExcelUtil {
                     log.debug("ファイル名:" + f.getName());
                     // 拡張子を消す
                     String fileName = f.getName().replaceAll(EXCEL_EXT_NAME, "");
-                    // テンプレート名を消す
-                    fileName = fileName.replaceAll(LIST_TEMPLATE_PREFIX, "");
-                    log.debug("数字のみ:" + fileName);
+                    // テンプレート名を消し数字のみにする
+                    String id = ExcelFileEnum.ID_PREFIX.getValue().concat(fileName.replaceAll(LIST_TEMPLATE_PREFIX, ""));
                     SelectBoxDto dto = new SelectBoxDto();
-                    dto.setId(Integer.parseInt(fileName));
+                    dto.setId(id);
                     dto.setValue(f.getName());
                     list.add(dto);
                 }
             }
+
         } catch (IOException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートディレクトリの読み込みに失敗しました");
         }
@@ -105,9 +106,9 @@ public class ExcelUtil {
      * @param id テンプレート番号
      * @return 一覧テンプレートファイル
      */
-    public static File getTemplate(int id) {
+    public static File getTemplate(String id) {
         try {
-            String target = LIST_TEMPLATE_PREFIX + id + EXCEL_EXT_NAME;
+            String target = LIST_TEMPLATE_PREFIX + id.replace(ExcelFileEnum.ID_PREFIX.getValue(), "") + EXCEL_EXT_NAME;
             URI targetDir = new ClassPathResource(LIST_TEMPLATE_DIR + target).getURI();
 
             // ターゲットファイル
@@ -180,7 +181,7 @@ public class ExcelUtil {
                             });
                         }
                     } else {
-                        log.warn(annotation.tags() + "の行が見つかりません");
+                        log.warn(Arrays.toString(annotation.tags()) + "の行が見つかりません");
                     }
                 } else {
                     log.warn("変数【" + f.getName() + "】にはアノテーションが付与されていません");

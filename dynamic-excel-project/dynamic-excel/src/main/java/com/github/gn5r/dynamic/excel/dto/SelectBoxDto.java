@@ -16,7 +16,7 @@ public class SelectBoxDto {
      * SelectBox Index
      */
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     /**
      * SelectBox value

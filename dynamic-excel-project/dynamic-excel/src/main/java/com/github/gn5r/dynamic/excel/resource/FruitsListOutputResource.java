@@ -20,7 +20,7 @@ public class FruitsListOutputResource implements Serializable {
 
     @NotNull
     @ApiModelProperty(value = "テンプレートID")
-    private Integer templateId;
+    private String templateId;
 
     @NotEmpty
     @ApiModelProperty(value = "果物一覧")

@@ -12,7 +12,7 @@ import lombok.Data;
 public class SelectBoxResource {
 
     @ApiModelProperty(value = "ID")
-    private Integer id;
+    private String id;
 
     @ApiModelProperty(value = "value")
     private String value;

@@ -8,10 +8,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
+import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 import com.github.gn5r.dynamic.excel.enums.経費Enum;
+import com.github.gn5r.dynamic.excel.repository.SelectBoxDao;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
 import org.apache.poi.EncryptedDocumentException;
@@ -39,6 +42,9 @@ public class ExcelService {
 
     @Autowired
     protected ModelMapper modelMapper;
+
+    @Autowired
+    private SelectBoxDao selectBoxDao;
 
     private CreationHelper helper;
 
@@ -202,7 +208,7 @@ public class ExcelService {
         return null;
     }
 
-    public byte[] getTemplateFile(Integer id) {
+    public byte[] getTemplateFile(String id) {
         File file = ExcelUtil.getTemplate(id);
 
         try {
@@ -211,5 +217,9 @@ public class ExcelService {
             e.printStackTrace();
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートディレクトリの読み込みに失敗しました");
         }
+    }
+
+    public List<SelectBoxDto> getTemplateList() {
+        return selectBoxDao.selectTemplateList();
     }
 }
