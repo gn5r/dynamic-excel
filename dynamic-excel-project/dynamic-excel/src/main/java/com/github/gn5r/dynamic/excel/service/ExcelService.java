@@ -3,6 +3,7 @@ package com.github.gn5r.dynamic.excel.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,9 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.gn5r.dynamic.excel.Enum.ExcelFileEnum;
 import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
+import com.github.gn5r.dynamic.excel.entity.ExcelTemplateTbl;
 import com.github.gn5r.dynamic.excel.enums.経費Enum;
+import com.github.gn5r.dynamic.excel.repository.ExcelTemplateTblDao;
 import com.github.gn5r.dynamic.excel.repository.SelectBoxDao;
 import com.github.gn5r.dynamic.excel.util.ExcelUtil;
 
@@ -31,6 +35,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +50,9 @@ public class ExcelService {
 
     @Autowired
     private SelectBoxDao selectBoxDao;
+
+    @Autowired
+    private ExcelTemplateTblDao excelTemplateTblDao;
 
     private CreationHelper helper;
 
@@ -203,6 +211,41 @@ public class ExcelService {
             } else {
                 return destinationType.cast(value);
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * 一覧テンプレートを取得する
+     * 
+     * @param id テンプレート番号
+     * @return 一覧テンプレートファイル
+     */
+    public File getTemplate(String id) {
+        try {
+            if(id.matches(ExcelFileEnum.ID_PREFIX.getValue() + ".*")) {
+                String target = ExcelUtil.LIST_TEMPLATE_PREFIX + id.replace(ExcelFileEnum.ID_PREFIX.getValue(), "")
+                        + ExcelUtil.EXCEL_EXT_NAME;
+                URI targetDir = new ClassPathResource(ExcelUtil.LIST_TEMPLATE_DIR + target).getURI();
+
+                // ターゲットファイル
+                File targetFile = new File(targetDir);
+
+                if (targetFile.exists()) {
+                    return targetFile;
+                }
+            } else {
+                ExcelTemplateTbl entity = excelTemplateTblDao.selectById(Integer.parseInt(id));
+                if (entity != null) {
+                    File targetFile = new File(entity.getPath());
+                    if (targetFile.exists()) {
+                        return targetFile;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートファイルの読み込みに失敗しました");
         }
 
         return null;

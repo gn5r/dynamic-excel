@@ -44,7 +44,6 @@
 				destdir="${javaDestDir}"
 				packageName="${entityPackageName}"
 				useAccessor="${useAccessor}"
-				namingType="${namingType}"
 				useListener="${useListener}"
 			/>
 			<daoConfig
