@@ -1,10 +1,12 @@
 package com.github.gn5r.dynamic.excel.entity;
 
 import java.time.LocalDateTime;
+import org.seasar.doma.Column;
 import org.seasar.doma.Entity;
+import org.seasar.doma.GeneratedValue;
+import org.seasar.doma.GenerationType;
 import org.seasar.doma.Id;
 import org.seasar.doma.Table;
-import org.seasar.doma.jdbc.entity.NamingType;
 
 /**
  * ファイル種別マスタエンティティ
@@ -12,26 +14,33 @@ import org.seasar.doma.jdbc.entity.NamingType;
  * @author gn5r
  */
 @lombok.Data
-@Entity(listener = FileTypeMstListener.class, naming = NamingType.SNAKE_UPPER_CASE)
+@Entity(listener = FileTypeMstListener.class)
 @Table(name = "FILE_TYPE_MST")
 public class FileTypeMst {
 
     /** 登録順に自動で割り振られるID */
     @Id
-    protected Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
 
     /** ファイル種別名 */
-    protected String typeName;
+    @Column(name = "種別名")
+    private String typeName;
 
     /** 登録日 */
-    protected LocalDateTime createDate;
+    @Column(name = "登録日")
+    private LocalDateTime createDate;
 
     /** 更新日 */
-    protected LocalDateTime updateDate;
+    @Column(name = "更新日")
+    private LocalDateTime updateDate;
 
     /** 論理削除フラグ */
-    protected Boolean delFlg;
+    @Column(name = "論理削除フラグ")
+    private Boolean delFlg;
 
     /** ファイル種別ごとの保存先パスの接頭辞 */
-    protected String prefixPath;
+    @Column(name = "PREFIX_PATH")
+    private String prefixPath;
 }
