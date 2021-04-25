@@ -22,10 +22,4 @@ public class FruitsListExcelDto {
 
     @ExcelCell(tags = { "フッター" })
     private String footer;
-
-    // @ExcelCell(tags = { "フッタータイトル" })
-    // private String footerTitle;
-
-    // @ExcelCell(tags = { "フッターテキスト" })
-    // private String footerText;
 }
