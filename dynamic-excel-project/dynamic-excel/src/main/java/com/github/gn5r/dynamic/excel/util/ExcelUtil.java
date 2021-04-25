@@ -1,9 +1,14 @@
 package com.github.gn5r.dynamic.excel.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,17 +19,20 @@ import com.github.gn5r.dynamic.excel.common.exception.RestRuntimeException;
 import com.github.gn5r.dynamic.excel.dto.SelectBoxDto;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +93,8 @@ public class ExcelUtil {
                     // 拡張子を消す
                     String fileName = f.getName().replaceAll(EXCEL_EXT_NAME, "");
                     // テンプレート名を消し数字のみにする
-                    String id = ExcelFileEnum.ID_PREFIX.getValue().concat(fileName.replaceAll(LIST_TEMPLATE_PREFIX, ""));
+                    String id = ExcelFileEnum.ID_PREFIX.getValue()
+                            .concat(fileName.replaceAll(LIST_TEMPLATE_PREFIX, ""));
                     SelectBoxDto dto = new SelectBoxDto();
                     dto.setId(id);
                     dto.setValue(f.getName());
@@ -135,10 +144,10 @@ public class ExcelUtil {
             URI targetDir = new ClassPathResource(DETAIL_TEMPLATE_DIR + target).getURI();
 
             File targetFile = new File(targetDir);
-            if(targetFile.exists()) {
+            if (targetFile.exists()) {
                 return targetFile;
             }
-        
+
         } catch (IOException e) {
             throw new RestRuntimeException(HttpStatus.INTERNAL_SERVER_ERROR, "テンプレートファイルの読み込みに失敗しました");
         }
@@ -168,9 +177,10 @@ public class ExcelUtil {
                 if (annotation != null) {
                     Name cellName = getName(workbook, annotation.tags());
                     if (cellName != null) {
-                        AreaReference areaRef = new AreaReference(cellName.getRefersToFormula(), workbook.getSpreadsheetVersion());
+                        AreaReference areaRef = new AreaReference(cellName.getRefersToFormula(),
+                                workbook.getSpreadsheetVersion());
                         List<CellReference> cells = Arrays.asList(areaRef.getAllReferencedCells());
-                        if(CollectionUtils.isNotEmpty(cells)) {
+                        if (CollectionUtils.isNotEmpty(cells)) {
                             cells.stream().forEach(ref -> {
                                 ExcelData data = new ExcelData();
                                 data.setRowNum(ref.getRow());
@@ -278,6 +288,34 @@ public class ExcelUtil {
         } else if (value instanceof String) {
             newCell.setCellValue((String) value);
         }
+    }
+
+    /**
+     * Excelファイルを指定したディレクトリに保存する
+     * 
+     * @param file Excelファイル
+     * @param path 保存先パス
+     */
+    public static String registExcelFile(MultipartFile file, String path) {
+        String fullPath = "";
+
+        try {
+            // ディレクトリを作成
+            Path dir = Paths.get(path);
+            Files.createDirectories(dir);
+
+            // FileOutputStreamで指定したディレクトリにファイルを出力する
+            Workbook wb = WorkbookFactory.create(file.getInputStream());
+            fullPath = path.concat(file.getOriginalFilename());
+            log.debug("フルパス:" + fullPath);
+            FileOutputStream out = new FileOutputStream(fullPath);
+            wb.write(out);
+            wb.close();
+        } catch (EncryptedDocumentException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return fullPath;
     }
 
     /**

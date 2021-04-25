@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(ExcelTemplateProperty.class)
 public class ExcelTemplateAutoConfiguration {
 
-    private static final String prefixDir = "C:/";
+    private static final String prefixDir = "C:";
 
     @Autowired
     private ExcelTemplateProperty propery;
