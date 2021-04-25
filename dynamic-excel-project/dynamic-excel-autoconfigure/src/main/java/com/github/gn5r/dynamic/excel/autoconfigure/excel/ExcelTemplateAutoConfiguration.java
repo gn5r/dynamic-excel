@@ -17,14 +17,16 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(ExcelTemplateProperty.class)
 public class ExcelTemplateAutoConfiguration {
 
+    private static final String prefixDir = "C:/";
+
     @Autowired
     private ExcelTemplateProperty propery;
 
     @PostConstruct
     public void setTemplateDir() {
+        // Windowsの場合C:/を先頭に付与する
         if(SystemUtils.IS_OS_WINDOWS) {
-            final String userDir = System.getenv("USERPROFILE");
-            final String dir = userDir.concat(propery.getDir());
+            final String dir = prefixDir.concat(propery.getDir());
             propery.setDir(dir);
         }
     }
