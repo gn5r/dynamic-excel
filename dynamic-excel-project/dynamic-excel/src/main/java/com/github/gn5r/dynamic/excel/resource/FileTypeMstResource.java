@@ -34,4 +34,8 @@ public class FileTypeMstResource {
     /** 論理削除フラグ */
     @ApiModelProperty(name = "論理削除フラグ")
     private Boolean delFlg;
+
+    /** PREFIX_PATH */
+    @ApiModelProperty(name = "PREFIX_PATH")
+    private String prefixPath;
 }
