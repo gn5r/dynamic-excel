@@ -48,7 +48,7 @@
           </header-bar>
 
           <!-- タブコンテンツ -->
-          <v-tabs-items v-model="tab">
+          <v-tabs-items v-model="tab" ref="tabs">
             <v-tab-item>
               <search class="v__tab__contents__frame" />
             </v-tab-item>
@@ -65,6 +65,14 @@
               <template-upload />
             </v-tab-item>
           </v-tabs-items>
+
+          <v-btn fixed fab icon width="24" style="top: 300px;left: 5px">
+            <v-icon @click="prevTab">fas fa-chevron-left</v-icon>
+          </v-btn>
+
+          <v-btn fixed fab icon width="24" style="top: 300px;right: 5px">
+            <v-icon @click="nextTab">fas fa-chevron-right</v-icon>
+          </v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -96,6 +104,12 @@ export default {
     tab: null,
   }),
   methods: {
+    prevTab() {
+      if(this.$refs.tabs.hasPrev) this.$refs.tabs.prev()
+    },
+    nextTab() {
+      if(this.$refs.tabs.hasNext) this.$refs.tabs.next()
+    },
     ...mapActions("master", [
       "getOrderList",
       "getFamilyList",
@@ -104,8 +118,7 @@ export default {
     ]),
     ...mapActions("app", ["setOfflineMode"]),
   },
-  created() {
-  },
+  created() {},
   mounted() {
     this.setLoading(false);
     this.getOrderList();
